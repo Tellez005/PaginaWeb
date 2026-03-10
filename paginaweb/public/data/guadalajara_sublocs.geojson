@@ -1,0 +1,81 @@
+{
+"type": "FeatureCollection",
+"features": [
+
+{
+"type": "Feature",
+"properties": { "SLNAME": "Centro Guadalajara" },
+"geometry": {
+"type": "Polygon",
+"coordinates": [[
+[-103.3525,20.6705],
+[-103.3385,20.6705],
+[-103.3385,20.6825],
+[-103.3525,20.6825],
+[-103.3525,20.6705]
+]]
+}
+},
+
+{
+"type": "Feature",
+"properties": { "SLNAME": "Colonia Americana" },
+"geometry": {
+"type": "Polygon",
+"coordinates": [[
+[-103.3660,20.6670],
+[-103.3540,20.6670],
+[-103.3540,20.6755],
+[-103.3660,20.6755],
+[-103.3660,20.6670]
+]]
+}
+},
+
+{
+"type": "Feature",
+"properties": { "SLNAME": "Providencia" },
+"geometry": {
+"type": "Polygon",
+"coordinates": [[
+[-103.3900,20.7000],
+[-103.3700,20.7000],
+[-103.3700,20.7150],
+[-103.3900,20.7150],
+[-103.3900,20.7000]
+]]
+}
+},
+
+{
+"type": "Feature",
+"properties": { "SLNAME": "Chapalita" },
+"geometry": {
+"type": "Polygon",
+"coordinates": [[
+[-103.3950,20.6600],
+[-103.3800,20.6600],
+[-103.3800,20.6700],
+[-103.3950,20.6700],
+[-103.3950,20.6600]
+]]
+}
+},
+
+{
+"type": "Feature",
+"properties": { "SLNAME": "Zapopan Centro" },
+"geometry": {
+"type": "Polygon",
+"coordinates": [[
+[-103.4050,20.7200],
+[-103.3900,20.7200],
+[-103.3900,20.7350],
+[-103.4050,20.7350],
+[-103.4050,20.7200]
+]]
+}
+}
+
+]
+}
