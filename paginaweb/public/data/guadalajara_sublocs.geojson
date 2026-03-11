@@ -1,80 +1,100 @@
 {
 "type": "FeatureCollection",
+"name": "guadalajara_sublocs",
+"crs": {
+"type": "name",
+"properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" }
+},
 "features": [
 
 {
 "type": "Feature",
-"properties": { "SLNAME": "Centro Guadalajara" },
-"geometry": {
-"type": "Polygon",
-"coordinates": [[
-[-103.3525,20.6705],
-[-103.3385,20.6705],
-[-103.3385,20.6825],
-[-103.3525,20.6825],
-[-103.3525,20.6705]
-]]
-}
+"properties": {"OBJECTID":1,"SLNAME":"CENTRO GUADALAJARA","MUNICIPIO":"GUADALAJARA"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.3527,20.6712],[-103.3501,20.6748],[-103.3456,20.6769],[-103.3418,20.6751],[-103.3394,20.6720],[-103.3406,20.6684],[-103.3442,20.6661],[-103.3487,20.6663],[-103.3527,20.6712]]]]}
 },
 
 {
 "type": "Feature",
-"properties": { "SLNAME": "Colonia Americana" },
-"geometry": {
-"type": "Polygon",
-"coordinates": [[
-[-103.3660,20.6670],
-[-103.3540,20.6670],
-[-103.3540,20.6755],
-[-103.3660,20.6755],
-[-103.3660,20.6670]
-]]
-}
+"properties": {"OBJECTID":2,"SLNAME":"COLONIA AMERICANA","MUNICIPIO":"GUADALAJARA"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.3721,20.6698],[-103.3694,20.6723],[-103.3658,20.6739],[-103.3621,20.6732],[-103.3587,20.6714],[-103.3569,20.6682],[-103.3580,20.6655],[-103.3614,20.6639],[-103.3661,20.6641],[-103.3696,20.6662],[-103.3721,20.6698]]]]}
 },
 
 {
 "type": "Feature",
-"properties": { "SLNAME": "Providencia" },
-"geometry": {
-"type": "Polygon",
-"coordinates": [[
-[-103.3900,20.7000],
-[-103.3700,20.7000],
-[-103.3700,20.7150],
-[-103.3900,20.7150],
-[-103.3900,20.7000]
-]]
-}
+"properties": {"OBJECTID":3,"SLNAME":"PROVIDENCIA","MUNICIPIO":"GUADALAJARA"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.3897,20.7054],[-103.3863,20.7098],[-103.3815,20.7126],[-103.3764,20.7112],[-103.3728,20.7083],[-103.3735,20.7034],[-103.3781,20.7002],[-103.3839,20.6996],[-103.3879,20.7019],[-103.3897,20.7054]]]]}
 },
 
 {
 "type": "Feature",
-"properties": { "SLNAME": "Chapalita" },
-"geometry": {
-"type": "Polygon",
-"coordinates": [[
-[-103.3950,20.6600],
-[-103.3800,20.6600],
-[-103.3800,20.6700],
-[-103.3950,20.6700],
-[-103.3950,20.6600]
-]]
-}
+"properties": {"OBJECTID":4,"SLNAME":"CHAPALITA","MUNICIPIO":"GUADALAJARA"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.3952,20.6647],[-103.3928,20.6679],[-103.3884,20.6694],[-103.3836,20.6681],[-103.3814,20.6649],[-103.3825,20.6612],[-103.3867,20.6594],[-103.3910,20.6603],[-103.3942,20.6620],[-103.3952,20.6647]]]]}
 },
 
 {
 "type": "Feature",
-"properties": { "SLNAME": "Zapopan Centro" },
-"geometry": {
-"type": "Polygon",
-"coordinates": [[
-[-103.4050,20.7200],
-[-103.3900,20.7200],
-[-103.3900,20.7350],
-[-103.4050,20.7350],
-[-103.4050,20.7200]
-]]
-}
+"properties": {"OBJECTID":5,"SLNAME":"ZAPOPAN CENTRO","MUNICIPIO":"ZAPOPAN"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.4087,20.7241],[-103.4043,20.7279],[-103.3986,20.7292],[-103.3941,20.7264],[-103.3934,20.7223],[-103.3968,20.7191],[-103.4017,20.7182],[-103.4063,20.7198],[-103.4087,20.7241]]]]}
+},
+
+{
+"type": "Feature",
+"properties": {"OBJECTID":6,"SLNAME":"OBLATOS","MUNICIPIO":"GUADALAJARA"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.3067,20.6889],[-103.3034,20.6921],[-103.2990,20.6932],[-103.2956,20.6914],[-103.2951,20.6877],[-103.2979,20.6849],[-103.3024,20.6840],[-103.3059,20.6861],[-103.3067,20.6889]]]]}
+},
+
+{
+"type": "Feature",
+"properties": {"OBJECTID":7,"SLNAME":"TLAQUEPAQUE CENTRO","MUNICIPIO":"TLAQUEPAQUE"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.3157,20.6402],[-103.3122,20.6438],[-103.3074,20.6451],[-103.3031,20.6427],[-103.3025,20.6391],[-103.3058,20.6361],[-103.3103,20.6352],[-103.3146,20.6374],[-103.3157,20.6402]]]]}
+},
+
+{
+"type": "Feature",
+"properties": {"OBJECTID":8,"SLNAME":"TONALA CENTRO","MUNICIPIO":"TONALA"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.2381,20.6267],[-103.2347,20.6302],[-103.2301,20.6315],[-103.2265,20.6294],[-103.2260,20.6259],[-103.2291,20.6231],[-103.2337,20.6221],[-103.2373,20.6242],[-103.2381,20.6267]]]]}
+},
+
+{
+"type": "Feature",
+"properties": {"OBJECTID":9,"SLNAME":"COLINAS DE SAN JAVIER","MUNICIPIO":"ZAPOPAN"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.4042,20.7083],[-103.4011,20.7117],[-103.3963,20.7131],[-103.3921,20.7112],[-103.3915,20.7076],[-103.3944,20.7046],[-103.3991,20.7037],[-103.4028,20.7054],[-103.4042,20.7083]]]]}
+},
+
+{
+"type": "Feature",
+"properties": {"OBJECTID":10,"SLNAME":"JARDINES DEL BOSQUE","MUNICIPIO":"GUADALAJARA"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.3867,20.6543],[-103.3828,20.6571],[-103.3789,20.6584],[-103.3749,20.6563],[-103.3745,20.6531],[-103.3772,20.6507],[-103.3812,20.6498],[-103.3853,20.6513],[-103.3867,20.6543]]]]}
+},
+
+{
+"type": "Feature",
+"properties": {"OBJECTID":11,"SLNAME":"SANTA TERE","MUNICIPIO":"GUADALAJARA"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.3577,20.6863],[-103.3543,20.6889],[-103.3501,20.6896],[-103.3469,20.6879],[-103.3467,20.6849],[-103.3492,20.6827],[-103.3533,20.6822],[-103.3565,20.6839],[-103.3577,20.6863]]]]}
+},
+
+{
+"type": "Feature",
+"properties": {"OBJECTID":12,"SLNAME":"LADRON DE GUEVARA","MUNICIPIO":"GUADALAJARA"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.3729,20.6817],[-103.3698,20.6843],[-103.3659,20.6850],[-103.3627,20.6832],[-103.3625,20.6801],[-103.3650,20.6779],[-103.3689,20.6773],[-103.3718,20.6789],[-103.3729,20.6817]]]]}
+},
+
+{
+"type": "Feature",
+"properties": {"OBJECTID":13,"SLNAME":"MEZQUITAN","MUNICIPIO":"GUADALAJARA"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.3561,20.7044],[-103.3529,20.7076],[-103.3482,20.7086],[-103.3447,20.7067],[-103.3443,20.7031],[-103.3472,20.7004],[-103.3518,20.6994],[-103.3553,20.7013],[-103.3561,20.7044]]]]}
+},
+
+{
+"type": "Feature",
+"properties": {"OBJECTID":14,"SLNAME":"HUENTITAN","MUNICIPIO":"GUADALAJARA"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.3261,20.7423],[-103.3227,20.7456],[-103.3179,20.7471],[-103.3134,20.7448],[-103.3127,20.7407],[-103.3161,20.7374],[-103.3209,20.7362],[-103.3254,20.7384],[-103.3261,20.7423]]]]}
+},
+
+{
+"type": "Feature",
+"properties": {"OBJECTID":15,"SLNAME":"ATEMAJAC","MUNICIPIO":"ZAPOPAN"},
+"geometry":{"type":"MultiPolygon","coordinates":[[[[-103.3749,20.7362],[-103.3714,20.7397],[-103.3668,20.7412],[-103.3621,20.7390],[-103.3616,20.7353],[-103.3650,20.7322],[-103.3698,20.7314],[-103.3738,20.7330],[-103.3749,20.7362]]]]}
 }
 
 ]

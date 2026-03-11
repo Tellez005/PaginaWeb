@@ -1,6 +1,36 @@
 import React, { useEffect, useRef, useState }  from "react";
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON} from "react-leaflet";
 import 'leaflet/dist/leaflet.css'
+import L, { icon, marker } from "leaflet"; 
+var dogIcon = L.icon({
+    iconUrl: '/icons/Perro.png',
+
+    iconSize:     [38, 95], // size of the icon
+    shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
+var catIcon = L.icon({
+    iconUrl: '/icons/gatos.png',
+
+    iconSize:     [38, 95], // size of the icon
+    shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
+var otherIcon = L.icon({
+    iconUrl: '/icons/Desaparecidos.png',
+    iconSize:     [38, 95], // size of the icon
+    shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
 const Map = () => {
 
     const [geodata,setGeoData] = useState(null); 
@@ -24,8 +54,23 @@ const Map = () => {
             scrollWheelZoom={true}
             ref={mapRef}
             style={{height:"100%", width: "100%"}}
-            
             >
+                <Marker position={[20.73822228680415, -103.4472214186193]} icon={dogIcon}>
+                    <Popup>Perro</Popup>
+                </Marker>
+                <Marker position={[20.73822228680415, -103.4569214186193]} icon={catIcon}>
+                    <Popup>
+                        <div>
+                            <div>
+                                Gato
+                            </div> 
+                            <img src="logo192.png" width="150"/>
+                        </div>
+                        </Popup>
+                </Marker>
+                <Marker position={[20.73822228680415, -103.4679214186193]} icon={otherIcon}>
+                    <Popup>Otro</Popup>
+                </Marker>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
