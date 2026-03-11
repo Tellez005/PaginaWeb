@@ -46,14 +46,15 @@ const Map = () => {
 
     return(
         <>
-        <div style={{height:"600px"}}>
-            <h4>Sublocations</h4>     
+        <div style={{height:"100%", width:"100%"}}>
+  
             <MapContainer 
             center={position} 
             zoom={13} 
             scrollWheelZoom={true}
             ref={mapRef}
             style={{height:"100%", width: "100%"}}
+            
             >
                 <Marker position={[20.73822228680415, -103.4472214186193]} icon={dogIcon}>
                     <Popup>Perro</Popup>
@@ -62,9 +63,9 @@ const Map = () => {
                     <Popup>
                         <div>
                             <div>
-                                Gato
+                                <h3>Gato</h3>
                             </div> 
-                            <img src="logo192.png" width="150"/>
+                            <img src="logo192.png" width="100"/>
                         </div>
                         </Popup>
                 </Marker>

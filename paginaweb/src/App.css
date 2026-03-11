@@ -1,7 +1,28 @@
+.Contenedor{
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  overflow: hidden;
+}
 .App {
+  width: 50%;
+  height: 100%;
   text-align: center;
 }
-
+.Barra{
+  height: 70px;
+  background-color: white;
+  border-bottom: 1px solid;
+}
+.Contenido{
+  display: flex;
+  flex: 1;
+}
+.Panel{
+  width: 50%;
+  overflow-y: auto;
+  
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
