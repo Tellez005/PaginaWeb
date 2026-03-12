@@ -10,11 +10,42 @@ function App() {
       </div>
       <div className='Contenido'>
           <div className='Panel'>
-            <p>Panel izquierdo</p>
+            <div className='almacendeposts'>
+            <div className='posts'>
+                <p>Perro Jaime</p>
+                <img src='icons/Prueba1.jpeg'></img>
+            </div>
+                        <div className='posts'>
+                <p>Perro Jaime</p>
+                <img src='icons/Prueba1.jpeg'></img>
+            </div>
+                        <div className='posts'>
+                <p>Perro Jaime</p>
+                <img src='icons/Prueba1.jpeg'></img>
+            </div>
+                        <div className='posts'>
+                <p>Perro Jaime</p>
+                <img src='icons/Prueba1.jpeg'></img>
+            </div>
+                        <div className='posts'>
+                <p>Perro Jaime</p>
+                <img src='icons/Prueba1.jpeg'></img>
+            </div>
+                        <div className='posts'>
+                <p>Perro Jaime</p>
+                <img src='icons/Prueba1.jpeg'></img>
+            </div>
+                        <div className='posts'>
+                <p>Perro Jaime</p>
+                <img src='icons/Prueba1.jpeg'></img>
+            </div>
+            </div>
+
           </div>
           <div className="App">
             <Map />
           </div>
+
       </div>
 
     </div>
