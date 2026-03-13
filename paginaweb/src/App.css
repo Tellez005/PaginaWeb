@@ -10,24 +10,35 @@
   text-align: center;
 }
 .Barra{
-  height: 70px;
-  background-color: white;
+  height: 100px;
+  background-color: #dff4ed;
   border-bottom: 1px solid;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 10px;
+}
+
+.Barra img{
+  width: 80px;
+  height: auto;
 }
 .Contenido{
   display: flex;
   flex: 1;
   min-height: 0;
+  background-color: #d3eded;
 }
 .Panel{
   width: 50%;
   overflow-y: auto;
-  height: 100%;
   
 }
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+
 }
 
 .almacendeposts{
@@ -35,17 +46,34 @@
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   padding: 10px;
-
-}
-.Posts{
-  background-color: white;
-  border-radius: 10px;
-  padding: 10px;
-  margin: 10px;
-  flex: auto;
-  align-content: flex-start;
 }
 
+.posts{
+
+}
+.titulo{
+  text-align: center;
+}
+
+.imagenMascota img{ 
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+  margin: auto;
+
+}
+.imagenMascota button{
+  display: block;
+  margin: auto;
+  padding: auto;
+  cursor: pointer;
+}
+
+.botonAnimal{
+  background: none;
+  border: none;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
