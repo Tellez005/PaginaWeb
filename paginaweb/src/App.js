@@ -29,9 +29,24 @@ function App() {
                 <h3>Nombre: mara <br/> Donde se perdio: Avenida ramon corona 2515</h3>
                 <p>Descripcion: No camina mas de 5 minutos sin dormirse</p>
               </div>
-            <div className='imagenMascota'>
-                <button className='botonAnimal'><img src='icons/Mara1.jpeg'></img></button>
-            </div>
+<div className='imagenMascota'>
+
+  <button
+    className='botonAnimal'
+    onClick={() => setMostrarInfo(!mostrarInfo)}
+  >
+    <img src='icons/Mara1.jpeg' alt="Jaime"/>
+  </button>
+
+  {mostrarInfo && (
+    <div className="infoExtra">
+      <p>Edad: 4 años</p>
+      <p>Raza: French Bulldog</p>
+      <p>Telefono: 3312345678</p>
+    </div>
+  )}
+
+</div>
             </div>
               <div className='posts'>
               <div className='titulo'>
@@ -61,6 +76,69 @@ function App() {
             </div>
             </div>
             <div className='posts'>
+              <div className='titulo'>
+                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
+                <p>Descripcion: Me gusta que me carguen</p>
+              </div>
+            <div className='imagenMascota'>
+                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
+            </div>
+            </div>
+                        <div className='posts'>
+              <div className='titulo'>
+                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
+                <p>Descripcion: Me gusta que me carguen</p>
+              </div>
+            <div className='imagenMascota'>
+                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
+            </div>
+            </div>
+                        <div className='posts'>
+              <div className='titulo'>
+                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
+                <p>Descripcion: Me gusta que me carguen</p>
+              </div>
+            <div className='imagenMascota'>
+                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
+            </div>
+            </div>
+                        <div className='posts'>
+              <div className='titulo'>
+                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
+                <p>Descripcion: Me gusta que me carguen</p>
+              </div>
+            <div className='imagenMascota'>
+                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
+            </div>
+            </div>
+                        <div className='posts'>
+              <div className='titulo'>
+                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
+                <p>Descripcion: Me gusta que me carguen</p>
+              </div>
+            <div className='imagenMascota'>
+                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
+            </div>
+            </div>
+                        <div className='posts'>
+              <div className='titulo'>
+                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
+                <p>Descripcion: Me gusta que me carguen</p>
+              </div>
+            <div className='imagenMascota'>
+                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
+            </div>
+            </div>
+                        <div className='posts'>
+              <div className='titulo'>
+                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
+                <p>Descripcion: Me gusta que me carguen</p>
+              </div>
+            <div className='imagenMascota'>
+                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
+            </div>
+            </div>
+                        <div className='posts'>
               <div className='titulo'>
                 <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
                 <p>Descripcion: Me gusta que me carguen</p>

@@ -65,7 +65,6 @@ const Map = () => {
                             <div>
                                 <h3>Gato</h3>
                             </div> 
-                            <img src="logo192.png" width="100"/>
                         </div>
                         </Popup>
                 </Marker>
