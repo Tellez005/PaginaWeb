@@ -14,7 +14,73 @@ function App() {
     {
       id: 2,
       nombre: "Mara",
-      raza: "chitzu", 
+      raza: "shi tzu", 
+      lugar: "Avenida ramon corona 2515",
+      descripcion: "No camina mas de 5 minutos sin dormirse",
+      imagen: "icons/Mara1.jpeg"
+    },
+    {
+      id: 3,
+      nombre: "Mini mara",
+      lugar: "Avenida ramon corona 2515",
+      descripcion: "Es hija de mara",
+      imagen: "icons/mara3.jpeg"
+    },
+        {
+      id: 1,
+      nombre: "Jaime",
+      lugar: "Avenida ramon corona 2515",
+      descripcion: "Se llama Jaime y es un perro",
+      imagen: "icons/Prueba1.jpeg"
+    },
+    {
+      id: 2,
+      nombre: "Mara",
+      raza: "shi tzu", 
+      lugar: "Avenida ramon corona 2515",
+      descripcion: "No camina mas de 5 minutos sin dormirse",
+      imagen: "icons/Mara1.jpeg"
+    },
+    {
+      id: 3,
+      nombre: "Mini mara",
+      lugar: "Avenida ramon corona 2515",
+      descripcion: "Es hija de mara",
+      imagen: "icons/mara3.jpeg"
+    },
+        {
+      id: 1,
+      nombre: "Jaime",
+      lugar: "Avenida ramon corona 2515",
+      descripcion: "Se llama Jaime y es un perro",
+      imagen: "icons/Prueba1.jpeg"
+    },
+    {
+      id: 2,
+      nombre: "Mara",
+      raza: "shi tzu", 
+      lugar: "Avenida ramon corona 2515",
+      descripcion: "No camina mas de 5 minutos sin dormirse",
+      imagen: "icons/Mara1.jpeg"
+    },
+    {
+      id: 3,
+      nombre: "Mini mara",
+      lugar: "Avenida ramon corona 2515",
+      descripcion: "Es hija de mara",
+      imagen: "icons/mara3.jpeg"
+    },
+        {
+      id: 1,
+      nombre: "Jaime",
+      lugar: "Avenida ramon corona 2515",
+      descripcion: "Se llama Jaime y es un perro",
+      imagen: "icons/Prueba1.jpeg"
+    },
+    {
+      id: 2,
+      nombre: "Mara",
+      raza: "shi tzu", 
       lugar: "Avenida ramon corona 2515",
       descripcion: "No camina mas de 5 minutos sin dormirse",
       imagen: "icons/Mara1.jpeg"
