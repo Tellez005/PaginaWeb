@@ -1,163 +1,82 @@
-import logo from './logo.svg';
 import './App.css';
 import Map from './components/map/Map.jsx';
 import { useState } from "react";
 
 function App() {
-  const [mostrarInfo, setMostrarInfo] = useState(false);
+  const mascotas = [
+    {
+      id: 1,
+      nombre: "Jaime",
+      lugar: "Avenida ramon corona 2515",
+      descripcion: "Se llama Jaime y es un perro",
+      imagen: "icons/Prueba1.jpeg"
+    },
+    {
+      id: 2,
+      nombre: "Mara",
+      raza: "chitzu", 
+      lugar: "Avenida ramon corona 2515",
+      descripcion: "No camina mas de 5 minutos sin dormirse",
+      imagen: "icons/Mara1.jpeg"
+    },
+    {
+      id: 3,
+      nombre: "Mini mara",
+      lugar: "Avenida ramon corona 2515",
+      descripcion: "Es hija de mara",
+      imagen: "icons/mara3.jpeg"
+    }
+  ];
+
+  const [mostrarInfo] = useState(null);
+  const [mostrarInfoId, setMostrarInfoId] = useState(null);
   return (
     <div className='Contenedor'>
       <div className='Barra'>
-        <img src='icons/Logo.jpeg'></img> 
+        <img src='icons/Logo.jpeg' alt="Logo" />
       </div>
-      <div className='Contenido'> 
-          <div className='Panel'>
-            <div className='almacendeposts'>
-            <div className='posts'>
+
+      <div className='Contenido'>
+        <div className='Panel'>
+          <div className='almacendeposts'>
+
+          {mascotas.map((mascota) => (
+            <div className='posts' key={mascota.id}>
+
               <div className='titulo'>
-              <div className='titulo'>
-                <h3>Nombre: Jaime<br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: Se llama Jaime y es un perro</p>
+                <h3>Nombre: {mascota.nombre}</h3>
+                <p>descripcion: {mascota.descripcion}</p>
               </div>
-              </div>
+
               <div className='imagenMascota'>
-                <img src='icons/Prueba1.jpeg'></img>
-              </div>
-            </div> 
-            <div className='posts'>
-              <div className='titulo'>
-                <h3>Nombre: mara <br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: No camina mas de 5 minutos sin dormirse</p>
-              </div>
-<div className='imagenMascota'>
+                <button className='botonanimal'
+                onClick={() => setMostrarInfoId(mostrarInfoId === mascota.id ? null: mascota.id)}>
+                  <img src={mascota.imagen} alt={mascota.nombre}></img>
+                </button>
+              {mostrarInfo && (
+                <div className='infoExtra'>
+                  <p>Raza: {mascota.raza}</p>
 
-  <button
-    className='botonAnimal'
-    onClick={() => setMostrarInfo(!mostrarInfo)}
-  >
-    <img src='icons/Mara1.jpeg' alt="Jaime"/>
-  </button>
-
-  {mostrarInfo && (
-    <div className="infoExtra">
-      <p>Edad: 4 años</p>
-      <p>Raza: French Bulldog</p>
-      <p>Telefono: 3312345678</p>
-    </div>
-  )}
-
-</div>
-            </div>
-              <div className='posts'>
-              <div className='titulo'>
-                <h3>Nombre: Mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: Se duerme todo el dia</p>
+                </div>
+              )}
+              {mostrarInfoId === mascota.id && (
+              <div className="infoExtra">
+                <p>Raza: {mascota.raza}</p>
+                <p>descripcion: {mascota.descripcion}</p>
               </div>
-            <div className='imagenMascota'>
-                <button className='botonAnimal'><img src='icons/mara2.jpeg'></img></button>
-            </div>
-            </div>
-            <div className='posts'>
-              <div className='titulo'>
-                  <h3>Nombre: Mini mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: Es hija de mara</p>
+              )}
               </div>
-            <div className='imagenMascota'>
-                <button className='botonAnimal'><img src='icons/mara3.jpeg'></img></button>
             </div>
-            </div>
-              <div className='posts'>
-              <div className='titulo'>
-                <h3>Nombre: kyra<br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: Ladro todo el dia</p>
-              </div>
-            <div className='imagenMascota'>
-                <button className='botonAnimal'><img src='icons/mara4.jpeg'></img></button>
-            </div>
-            </div>
-            <div className='posts'>
-              <div className='titulo'>
-                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: Me gusta que me carguen</p>
-              </div>
-            <div className='imagenMascota'>
-                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
-            </div>
-            </div>
-                        <div className='posts'>
-              <div className='titulo'>
-                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: Me gusta que me carguen</p>
-              </div>
-            <div className='imagenMascota'>
-                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
-            </div>
-            </div>
-                        <div className='posts'>
-              <div className='titulo'>
-                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: Me gusta que me carguen</p>
-              </div>
-            <div className='imagenMascota'>
-                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
-            </div>
-            </div>
-                        <div className='posts'>
-              <div className='titulo'>
-                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: Me gusta que me carguen</p>
-              </div>
-            <div className='imagenMascota'>
-                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
-            </div>
-            </div>
-                        <div className='posts'>
-              <div className='titulo'>
-                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: Me gusta que me carguen</p>
-              </div>
-            <div className='imagenMascota'>
-                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
-            </div>
-            </div>
-                        <div className='posts'>
-              <div className='titulo'>
-                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: Me gusta que me carguen</p>
-              </div>
-            <div className='imagenMascota'>
-                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
-            </div>
-            </div>
-                        <div className='posts'>
-              <div className='titulo'>
-                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: Me gusta que me carguen</p>
-              </div>
-            <div className='imagenMascota'>
-                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
-            </div>
-            </div>
-                        <div className='posts'>
-              <div className='titulo'>
-                <h3>Nombre: mara<br/> Donde se perdio: Avenida ramon corona 2515</h3>
-                <p>Descripcion: Me gusta que me carguen</p>
-              </div>
-            <div className='imagenMascota'>
-                <button className='botonAnimal'><img src='icons/mara5.jpeg'></img></button>
-            </div>
-            </div>
-            </div>
+          ))}
 
           </div>
-          <div className="App">
-            <Map />
-          </div>
+        </div>
 
+        <div className="App">
+          <Map />
+        </div>
       </div>
-
     </div>
-    
   );
 }
 
