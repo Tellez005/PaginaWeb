@@ -5,6 +5,7 @@ import { useState } from "react";
 function App() {
   const mascotas = [
     {
+      //Es el unico que tiene direccion nomas para la prueba
       id: 1,
       nombre: "Jaime",
       lugar: "Avenida ramon corona 2515",
