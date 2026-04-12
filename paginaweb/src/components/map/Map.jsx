@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState }  from "react";
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap} from "react-leaflet";
 import 'leaflet/dist/leaflet.css'
 import L, { icon, marker } from "leaflet"; 
 var dogIcon = L.icon({
@@ -31,7 +31,20 @@ var otherIcon = L.icon({
     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
 
-const Map = () => {
+
+function MoverMapa({ mascotaSeleccionada }) {
+    const map = useMap();
+
+    useEffect(() => {
+        if (mascotaSeleccionada) {
+            map.setView([mascotaSeleccionada.lat, mascotaSeleccionada.lng], 16);
+        }
+    }, [mascotaSeleccionada, map]);
+
+    return null;
+}
+
+const Map = ({mascotaSeleccionada}) => {
 
     const [geodata,setGeoData] = useState(null); 
     const mapRef = useRef(); 
@@ -71,10 +84,17 @@ const Map = () => {
                 <Marker position={[20.73822228680415, -103.4679214186193]} icon={otherIcon}>
                     <Popup>Otro</Popup>
                 </Marker>
+                
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
+                <MoverMapa mascotaSeleccionada={mascotaSeleccionada} />
+                {mascotaSeleccionada && (
+                <Marker position={[mascotaSeleccionada.lat, mascotaSeleccionada.lng]}>
+                    <Popup>{mascotaSeleccionada.nombre}</Popup>
+                </Marker>
+                )}
                 {geodata && <GeoJSON data={geodata}/> }
             </MapContainer>
         </div>
@@ -83,3 +103,6 @@ const Map = () => {
 }
 
 export default Map 
+
+
+

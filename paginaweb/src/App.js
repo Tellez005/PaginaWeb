@@ -9,7 +9,10 @@ function App() {
       nombre: "Jaime",
       lugar: "Avenida ramon corona 2515",
       descripcion: "Se llama Jaime y es un perro",
-      imagen: "icons/Prueba1.jpeg"
+      imagen: "icons/Prueba1.jpeg",
+      lat: 20.6736, 
+      lng: -103.4160
+      
     },
     {
       id: 2,
@@ -27,14 +30,14 @@ function App() {
       imagen: "icons/mara3.jpeg"
     },
         {
-      id: 1,
+      id: 4,
       nombre: "Jaime",
       lugar: "Avenida ramon corona 2515",
       descripcion: "Se llama Jaime y es un perro",
       imagen: "icons/Prueba1.jpeg"
     },
     {
-      id: 2,
+      id: 5,
       nombre: "Mara",
       raza: "shi tzu", 
       lugar: "Avenida ramon corona 2515",
@@ -42,60 +45,18 @@ function App() {
       imagen: "icons/Mara1.jpeg"
     },
     {
-      id: 3,
+      id: 6,
       nombre: "Mini mara",
       lugar: "Avenida ramon corona 2515",
       descripcion: "Es hija de mara",
       imagen: "icons/mara3.jpeg"
     },
-        {
-      id: 1,
-      nombre: "Jaime",
-      lugar: "Avenida ramon corona 2515",
-      descripcion: "Se llama Jaime y es un perro",
-      imagen: "icons/Prueba1.jpeg"
-    },
-    {
-      id: 2,
-      nombre: "Mara",
-      raza: "shi tzu", 
-      lugar: "Avenida ramon corona 2515",
-      descripcion: "No camina mas de 5 minutos sin dormirse",
-      imagen: "icons/Mara1.jpeg"
-    },
-    {
-      id: 3,
-      nombre: "Mini mara",
-      lugar: "Avenida ramon corona 2515",
-      descripcion: "Es hija de mara",
-      imagen: "icons/mara3.jpeg"
-    },
-        {
-      id: 1,
-      nombre: "Jaime",
-      lugar: "Avenida ramon corona 2515",
-      descripcion: "Se llama Jaime y es un perro",
-      imagen: "icons/Prueba1.jpeg"
-    },
-    {
-      id: 2,
-      nombre: "Mara",
-      raza: "shi tzu", 
-      lugar: "Avenida ramon corona 2515",
-      descripcion: "No camina mas de 5 minutos sin dormirse",
-      imagen: "icons/Mara1.jpeg"
-    },
-    {
-      id: 3,
-      nombre: "Mini mara",
-      lugar: "Avenida ramon corona 2515",
-      descripcion: "Es hija de mara",
-      imagen: "icons/mara3.jpeg"
-    }
+
   ];
 
-  const [mostrarInfo] = useState(null);
   const [mostrarInfoId, setMostrarInfoId] = useState(null);
+  const [mostrarCuadro, setMostrarCuadro] = useState(null);
+  const [mascotaSeleccionada, setMascotaSeleccionada] = useState(null);
   return (
     <div className='Contenedor'>
       <div className='Barra'>
@@ -108,28 +69,33 @@ function App() {
 
           {mascotas.map((mascota) => (
             <div className='posts' key={mascota.id}>
-
-              <div className='titulo'>
-                <h3>Nombre: {mascota.nombre}</h3>
-                <p>descripcion: {mascota.descripcion}</p>
-              </div>
-
               <div className='imagenMascota'>
                 <button className='botonanimal'
-                onClick={() => setMostrarInfoId(mostrarInfoId === mascota.id ? null: mascota.id)}>
+                  onClick={() => {
+                    setMostrarCuadro(mostrarCuadro === mascota.id ? null: mascota.id); 
+                    setMascotaSeleccionada(mascota); 
+                  }}>
                   <img src={mascota.imagen} alt={mascota.nombre}></img>
                 </button>
-              {mostrarInfo && (
-                <div className='infoExtra'>
-                  <p>Raza: {mascota.raza}</p>
-
-                </div>
-              )}
+              <div className='titulo'>
+                <h3>Nombre: {mascota.nombre}</h3>
+              </div>
               {mostrarInfoId === mascota.id && (
               <div className="infoExtra">
                 <p>Raza: {mascota.raza}</p>
                 <p>descripcion: {mascota.descripcion}</p>
               </div>
+              )}
+              {mostrarCuadro === mascota.id && (
+                <div className='overlay'>
+                  <div className='modelo'>
+                    <h2>Informacion Adicional</h2>
+                    <p>Raza: {mascota.raza}</p>
+                    <p>descripcion: {mascota.descripcion} </p>
+                    <img src={mascota.imagen} alt={mascota.descripcion}></img>
+                    <button onClick={() => setMostrarCuadro(false)}>Cerrar</button>
+                  </div> 
+                </div>
               )}
               </div>
             </div>
@@ -139,7 +105,7 @@ function App() {
         </div>
 
         <div className="App">
-          <Map />
+          <Map mascotaSeleccionada = {mascotaSeleccionada}/>
         </div>
       </div>
     </div>
