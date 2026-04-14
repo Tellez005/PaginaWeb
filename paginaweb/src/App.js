@@ -21,7 +21,9 @@ function App() {
       raza: "shi tzu", 
       lugar: "Avenida ramon corona 2515",
       descripcion: "No camina mas de 5 minutos sin dormirse",
-      imagen: "icons/Mara1.jpeg"
+      imagen: "icons/Mara1.jpeg",
+      lat: 20.6736, 
+      lng: -103.4160
     },
     {
       id: 3,

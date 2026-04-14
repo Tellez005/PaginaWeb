@@ -5,7 +5,7 @@ import L, { icon, marker } from "leaflet";
 var dogIcon = L.icon({
     iconUrl: '/icons/Perro.png',
 
-    iconSize:     [38, 95], // size of the icon
+    iconSize:     [85, 110], // size of the icon
     shadowSize:   [50, 64], // size of the shadow
     iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
     shadowAnchor: [4, 62],  // the same for the shadow
@@ -70,7 +70,7 @@ const Map = ({mascotaSeleccionada}) => {
             
             >
                 <Marker position={[20.73822228680415, -103.4472214186193]} icon={dogIcon}>
-                    <Popup>Perro</Popup>
+                    <Popup >Perro</Popup>
                 </Marker>
                 <Marker position={[20.73822228680415, -103.4569214186193]} icon={catIcon}>
                     <Popup>
@@ -91,7 +91,8 @@ const Map = ({mascotaSeleccionada}) => {
                 />
                 <MoverMapa mascotaSeleccionada={mascotaSeleccionada} />
                 {mascotaSeleccionada && (
-                <Marker position={[mascotaSeleccionada.lat, mascotaSeleccionada.lng]}>
+                <Marker position={[mascotaSeleccionada.lat, mascotaSeleccionada.lng]}
+                    icon={dogIcon}>; 
                     <Popup>{mascotaSeleccionada.nombre}</Popup>
                 </Marker>
                 )}
