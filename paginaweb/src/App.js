@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/AgregarMascota" element={<AgregarMascota/ >} />
-        <Route path="/Mapa" element={<Mapa />} />
+        <Route path="/" element={<Mapa />} />
       </Routes>
     </BrowserRouter>
   );
