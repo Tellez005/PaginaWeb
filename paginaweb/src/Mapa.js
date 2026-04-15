@@ -2,7 +2,6 @@ import './App.css';
 import Map from './components/map/Map.jsx';
 import { useEffect, useState } from "react";
 
-
 function Mapa() {
   const [mascotas, setMascotas] = useState([]);
   const [mostrarCuadro, setMostrarCuadro] = useState(null);
@@ -40,7 +39,10 @@ function Mapa() {
                     }}
                   >
                     {mascota.imagen ? (
-                      <img src={mascota.imagen} alt={mascota.nombre} />
+                      <img
+                        src={`http://localhost:3001${mascota.imagen}`}
+                        alt={mascota.nombre}
+                      />
                     ) : (
                       <div>No hay imagen</div>
                     )}
@@ -52,24 +54,29 @@ function Mapa() {
 
                   <p>Raza: {mascota.raza}</p>
                   <p>Edad: {mascota.edad}</p>
-                  <p>Descripcion: {mascota.descripcion}</p>
+                  <p>Descripción: {mascota.descripcion}</p>
 
                   {mostrarCuadro === mascota.id && (
                     <div className='overlay'>
                       <div className='modelo'>
-                        <h2>Informacion Adicional</h2>
+                        <h2>Información Adicional</h2>
                         <p>Nombre: {mascota.nombre}</p>
                         <p>Raza: {mascota.raza}</p>
                         <p>Edad: {mascota.edad}</p>
-                        <p>Descripcion: {mascota.descripcion}</p>
+                        <p>Descripción: {mascota.descripcion}</p>
 
                         {mascota.imagen ? (
-                          <img src={mascota.imagen} alt={mascota.nombre} />
+                          <img
+                            src={`http://localhost:3001${mascota.imagen}`}
+                            alt={mascota.nombre}
+                          />
                         ) : (
                           <p>No hay imagen</p>
                         )}
 
-                        <button onClick={() => setMostrarCuadro(null)}>Cerrar</button>
+                        <button onClick={() => setMostrarCuadro(null)}>
+                          Cerrar
+                        </button>
                       </div>
                     </div>
                   )}
@@ -87,4 +94,4 @@ function Mapa() {
   );
 }
 
-export default Mapa; 
+export default Mapa;

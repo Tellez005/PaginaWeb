@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import "./AgregarMascota.css";
 function AgregarMascota() {
   const [nombre, setNombre] = useState("");
   const [raza, setRaza] = useState("");
@@ -70,83 +70,92 @@ function AgregarMascota() {
     }
   }
 
-  return (
-    <div>
-      <div>
-        <h1>Mascota nombre: <span>{nombre}</span></h1>
-      </div>
-      <input
-        type="text"
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-      />
+ return (
+  <div className="agregar-mascota-contenedor">
+    <div className="agregar-mascota-card">
+      <h1 className="agregar-mascota-titulo">Agregar Mascota</h1>
 
-      <div>
-        <h1>Mascota raza: <span>{raza}</span></h1>
-      </div>
-      <input
-        type="text"
-        value={raza}
-        onChange={(e) => setRaza(e.target.value)}
-      />
-
-      <div>
-        <h1>Mascota edad: <span>{edad}</span></h1>
-      </div>
-      <input
-        type="number"
-        value={edad}
-        onChange={(e) => setEdad(e.target.value)}
-      />
-
-      <div>
-        <h1>Mascota latitud: <span>{lat}</span></h1>
-      </div>
-      <input
-        type="number"
-        step="any"
-        value={lat}
-        onChange={(e) => setLat(e.target.value)}
-      />
-
-      <div>
-        <h1>Mascota longitud: <span>{lng}</span></h1>
-      </div>
-      <input
-        type="number"
-        step="any"
-        value={lng}
-        onChange={(e) => setLng(e.target.value)}
-      />
-
-      <div>
-        <h1>Mascota descripción: <span>{descripcion}</span></h1>
-      </div>
-      <input
-        type="text"
-        value={descripcion}
-        onChange={(e) => setDescripcion(e.target.value)}
-      />
-
-      <div>
-        <h1>Imagen de la mascota</h1>
-      </div>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleImagen}
-      />
-
-      {preview && (
-        <div>
-          <p>Vista previa:</p>
-          <img src={preview} alt="Vista previa" width="200" />
+      <div className="agregar-mascota-formulario">
+        <div className="agregar-mascota-grupo">
+          <label>Nombre</label>
+          <input
+            type="text"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+          />
         </div>
-      )}
 
-      <button onClick={addMascota}>Mandar Datos</button>
+        <div className="agregar-mascota-grupo">
+          <label>Raza</label>
+          <input
+            type="text"
+            value={raza}
+            onChange={(e) => setRaza(e.target.value)}
+          />
+        </div>
+
+        <div className="agregar-mascota-grupo">
+          <label>Edad</label>
+          <input
+            type="number"
+            value={edad}
+            onChange={(e) => setEdad(e.target.value)}
+          />
+        </div>
+
+        <div className="agregar-mascota-grupo">
+          <label>Latitud</label>
+          <input
+            type="number"
+            step="any"
+            value={lat}
+            onChange={(e) => setLat(e.target.value)}
+          />
+        </div>
+
+        <div className="agregar-mascota-grupo">
+          <label>Longitud</label>
+          <input
+            type="number"
+            step="any"
+            value={lng}
+            onChange={(e) => setLng(e.target.value)}
+          />
+        </div>
+
+        <div className="agregar-mascota-grupo">
+          <label>Descripción</label>
+          <input
+            type="text"
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
+          />
+        </div>
+
+        <div className="agregar-mascota-grupo">
+          <label>Imagen</label>
+          <input
+            className="agregar-mascota-archivo"
+            type="file"
+            accept="image/*"
+            onChange={handleImagen}
+          />
+        </div>
+
+        {preview && (
+          <div className="agregar-mascota-preview">
+            <p>Vista previa</p>
+            <img src={preview} alt="Vista previa" />
+          </div>
+        )}
+
+        <button className="agregar-mascota-boton" onClick={addMascota}>
+          Mandar Datos
+        </button>
+      </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default AgregarMascota;
