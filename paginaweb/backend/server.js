@@ -19,6 +19,16 @@ const db = new sqlite3.Database(path.join(__dirname, 'db.sqlite'), (err) => {
     }
 });
 
+// Crear tabla si no existe
+db.run(`
+  CREATE TABLE IF NOT EXISTS users (
+    id_user INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL
+  )
+`);
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
@@ -30,6 +40,43 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+// Signup POST
+app.post('/signup', (req, res)=> {
+    const sql = 'INSERT INTO users (nombre, email, password) VALUES (?, ?, ?)'
+    const values = [
+        req.body.name,
+        req.body.email,
+        req.body.password
+    ]
+    
+    db.run(sql, values, function(err) {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json("Error");
+        }
+        return res.json({ id: this.lastID});
+    })
+})
+
+app.post('/login', (req, res)=> {
+    const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+    const values = [
+        req.body.email,
+        req.body.password
+    ]
+    
+    db.all(sql, values, (err, rows) => {
+        if (err) {
+            return res.status(500).json("Error");
+        }
+        if (rows.length > 0) {
+            return res.json("Success");
+        } else {
+            return res.json("Failed");
+        }
+    })
+})
 
 app.get('/prueba', (req, res) => {
     db.all('SELECT name FROM sqlite_master WHERE type="table"', [], (err, rows) => {
