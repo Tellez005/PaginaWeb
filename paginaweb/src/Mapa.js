@@ -1,7 +1,7 @@
 import './App.css';
 import Map from './components/map/Map.jsx';
 import { useEffect, useState } from "react";
-
+import "./Mapa.css";
 function Mapa() {
   const [mascotas, setMascotas] = useState([]);
   const [mostrarCuadro, setMostrarCuadro] = useState(null);
