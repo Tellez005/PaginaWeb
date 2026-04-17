@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const db = new sqlite3.Database(path.join(__dirname, 'db.sqlite'), (err) => {
+const db = new sqlite3.Database(path.join(__dirname, 'backend/db.sqlite'), (err) => {
     if (err) {
         console.log('Error al conectar a SQLite:', err.message);
     } else {
