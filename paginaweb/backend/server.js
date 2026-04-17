@@ -1,6 +1,7 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const fs = require('fs');
 const cors = require('cors');
 const multer = require('multer');
 
@@ -9,9 +10,20 @@ const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const db = new sqlite3.Database(path.join(__dirname, 'backend/db.sqlite'), (err) => {
+const uploadsPath = path.join(__dirname, 'uploads');
+const dbPath = path.join(__dirname, 'db.sqlite');
+
+if (!fs.existsSync(uploadsPath)) {
+    fs.mkdirSync(uploadsPath, { recursive: true });
+}
+
+app.use('/uploads', express.static(uploadsPath));
+
+console.log('Base de datos usada:', dbPath);
+console.log('Carpeta de uploads:', uploadsPath);
+
+const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.log('Error al conectar a SQLite:', err.message);
     } else {
@@ -19,7 +31,7 @@ const db = new sqlite3.Database(path.join(__dirname, 'backend/db.sqlite'), (err)
     }
 });
 
-// Crear tabla si no existe
+// Crear tabla users si no existe
 db.run(`
   CREATE TABLE IF NOT EXISTS users (
     id_user INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,9 +41,23 @@ db.run(`
   )
 `);
 
+// Crear tabla mascotas si no existe
+db.run(`
+  CREATE TABLE IF NOT EXISTS mascotas (
+    id_mascota INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    raza TEXT,
+    edad INTEGER,
+    lat REAL,
+    lng REAL,
+    descripcion TEXT,
+    imagen TEXT
+  )
+`);
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, uploadsPath);
     },
     filename: (req, file, cb) => {
         const nombreUnico = Date.now() + path.extname(file.originalname);
@@ -39,33 +65,34 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 // Signup POST
-app.post('/signup', (req, res)=> {
-    const sql = 'INSERT INTO users (nombre, email, password) VALUES (?, ?, ?)'
+app.post('/signup', (req, res) => {
+    const sql = 'INSERT INTO users (nombre, email, password) VALUES (?, ?, ?)';
     const values = [
         req.body.name,
         req.body.email,
         req.body.password
-    ]
-    
-    db.run(sql, values, function(err) {
+    ];
+
+    db.run(sql, values, function (err) {
         if (err) {
             console.error(err.message);
             return res.status(500).json("Error");
         }
-        return res.json({ id: this.lastID});
-    })
-})
+        return res.json({ id: this.lastID });
+    });
+});
 
-app.post('/login', (req, res)=> {
-    const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+// Login POST
+app.post('/login', (req, res) => {
+    const sql = 'SELECT * FROM users WHERE email = ? AND password = ?';
     const values = [
         req.body.email,
         req.body.password
-    ]
-    
+    ];
+
     db.all(sql, values, (err, rows) => {
         if (err) {
             return res.status(500).json("Error");
@@ -75,32 +102,33 @@ app.post('/login', (req, res)=> {
         } else {
             return res.json("Failed");
         }
-    })
-})
+    });
+});
 
+// Ver tablas
 app.get('/prueba', (req, res) => {
     db.all('SELECT name FROM sqlite_master WHERE type="table"', [], (err, rows) => {
         if (err) {
-            res.status(500).json({ error: err.message });
-            return;
+            return res.status(500).json({ error: err.message });
         }
         res.json(rows);
     });
 });
 
+// Obtener mascotas
 app.get('/mascotas', (req, res) => {
     db.all('SELECT * FROM mascotas', [], (err, rows) => {
         if (err) {
-            res.status(500).json({ error: err.message });
-            return;
+            return res.status(500).json({ error: err.message });
         }
         res.json(rows);
     });
 });
 
+// Guardar mascota
 app.post('/api/mascotas', upload.single('imagen'), (req, res) => {
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
+    console.log('BODY:', req.body);
+    console.log('FILE:', req.file);
 
     const { nombre, raza, edad, lat, lng, descripcion } = req.body;
     const imagen = req.file ? `/uploads/${req.file.filename}` : null;
@@ -110,18 +138,17 @@ app.post('/api/mascotas', upload.single('imagen'), (req, res) => {
         VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
 
-    db.run(insertar, [nombre, raza, edad, lat, lng, descripcion, imagen], function(error) {
+    db.run(insertar, [nombre, raza, edad, lat, lng, descripcion, imagen], function (error) {
         if (error) {
-            console.log("ERROR SQLITE:", error);
-            res.status(500).json({
-                message: "Error, no se guardo en el sistema",
+            console.log('ERROR SQLITE:', error);
+            return res.status(500).json({
+                message: 'Error, no se guardó en el sistema',
                 error: error.message
             });
-            return;
         }
 
         res.status(201).json({
-            mensaje: "Se guardo la mascota",
+            mensaje: 'Se guardó la mascota',
             id: this.lastID,
             imagen: imagen
         });
