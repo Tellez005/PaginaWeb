@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import { Link , useNavigate} from 'react-router-dom'
-
+import './Auth.css';
 
 function Validation(values) {
     let error = {}
@@ -45,6 +45,7 @@ function Login() {
         event.preventDefault();
         const validationErrors = Validation(values)
         setErrors(validationErrors);
+
         if(validationErrors.email === "" && validationErrors.password === "") {
             axios.post('http://localhost:3001/login', values)
             .then(res => {
@@ -53,7 +54,6 @@ function Login() {
                 } else {
                     alert("Account does not exist or wrong password entered")
                 }
-                
             })
             .catch(err => {
                 console.log("Error de conexion",err)
@@ -63,25 +63,35 @@ function Login() {
     }
 
     return(
-        <div className='d-flex justify content-center align items-center bg-primary vh-100'>
-            <div className='bg-white p-3 rounded w-25'>
+        <div className='auth-container'>
+            <div className='auth-box'>
                 <h2>Login</h2>
-                <form action="" onSubmit={handleSubmit}>
-                    <div className='mb-3'>
+                <form className='auth-form' onSubmit={handleSubmit}>
+                    <div className='form-group'>
                         <label htmlFor="email">Email</label>
-                        <input type="email" placeholder='Enter Email' name='email'
-                        onChange={handleInput}/>
-                        {errors.email && <span className='text-danger'>{errors.email}</span>}
+                        <input
+                            type="email"
+                            placeholder='Enter Email'
+                            name='email'
+                            onChange={handleInput}
+                        />
+                        {errors.email && <span className='error-text'>{errors.email}</span>}
                     </div>
-                    <div className='mb-3'>
+
+                    <div className='form-group'>
                         <label htmlFor="password">Password</label>
-                        <input type="password" placeholder='Enter Password' name='password'
-                        onChange={handleInput}/>
-                        {errors.password && <span className='text-danger'>{errors.password}</span>}
+                        <input
+                            type="password"
+                            placeholder='Enter Password'
+                            name='password'
+                            onChange={handleInput}
+                        />
+                        {errors.password && <span className='error-text'>{errors.password}</span>}
                     </div>
-                    <button type='submit' className='btn btn-success'>Log in</button>
-                    <p>You agree to our terms and policies</p>
-                    <Link to="/signup" className='btn btn-default border text-decoration-none'>Create Account</Link>
+
+                    <button type='submit' className='auth-button'>Log in</button>
+                    <p className='auth-text'>You agree to our terms and policies</p>
+                    <Link to="/signup" className='auth-link'>Create Account</Link>
                 </form>
             </div>
         </div>

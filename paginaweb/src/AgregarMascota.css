@@ -105,3 +105,24 @@ body {
   background-color: #5f9393;
   transform: scale(1.02);
 }
+
+.mapa-contenedor {
+  width: 100%;
+  height: 350px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  margin-top: 8px;
+}
+
+.direccion-box {
+  width: 100%;
+  min-height: 50px;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+}

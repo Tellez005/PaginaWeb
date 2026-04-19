@@ -1,13 +1,12 @@
 import axios from 'axios';
 import React, {useState} from 'react'
 import { Link , useNavigate} from 'react-router-dom'
-
+import './Auth.css';
 
 function Validation(values) {
     let error = {}
     const email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     const password_pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/
-    //Tiene que tener una Mayuscula, Minuscula y Numero
 
     if(values.name === "") {
         error.name = "Name should not be empty"
@@ -44,7 +43,7 @@ function SignUp() {
     })
     
     const navigate = useNavigate();
-    const [errors, setErrors] = useState([])
+    const [errors, setErrors] = useState({})
     
     const handleInput = (event) => {
         setValues(prev => ({...prev, [event.target.name]: event.target.value}))
@@ -52,8 +51,10 @@ function SignUp() {
     
     const handleSubmit = (event) => {
         event.preventDefault();
-        setErrors(Validation(values));
-        if(errors.name === "" && errors.email === "" && errors.password === "") {
+        const validationErrors = Validation(values);
+        setErrors(validationErrors);
+
+        if(validationErrors.name === "" && validationErrors.email === "" && validationErrors.password === "") {
             axios.post('http://localhost:3001/signup', values)
             .then(res => {
                 navigate('/');
@@ -63,32 +64,46 @@ function SignUp() {
     }
 
     return (
-        <div className='d-flex justify content-center align items-center bg-primary vh-100'>
-            <div className='bg-white p-3 rounded w-25'>
+        <div className='auth-container'>
+            <div className='auth-box'>
                 <h2>Sign Up</h2>
-                <form action="" onSubmit={handleSubmit}>
-                    <div className='mb-3'>
+                <form className='auth-form' onSubmit={handleSubmit}>
+                    <div className='form-group'>
                         <label htmlFor="name">Name</label>
-                        <input type="name" placeholder='Enter Name' name='name'
-                        onChange={handleInput}/>
-                        {errors.name && <span className='text-danger'>{errors.name}</span>}
+                        <input
+                            type="text"
+                            placeholder='Enter Name'
+                            name='name'
+                            onChange={handleInput}
+                        />
+                        {errors.name && <span className='error-text'>{errors.name}</span>}
                     </div>
-                    <div className='mb-3'>
-                        <label htmlFor="email">Email</label>
-                        <input type="email" placeholder='Enter Email' name='email'
-                        onChange={handleInput}/>
-                        {errors.email && <span className='text-danger'>{errors.email}</span>}
-                    </div>
-                    <div className='mb-3'>
-                        <label htmlFor="password">Password</label>
-                        <input type="password" placeholder='Enter Password' name='password'
-                        onChange={handleInput}/>
-                        {errors.password && <span className='text-danger'>{errors.password}</span>}
 
+                    <div className='form-group'>
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            placeholder='Enter Email'
+                            name='email'
+                            onChange={handleInput}
+                        />
+                        {errors.email && <span className='error-text'>{errors.email}</span>}
                     </div>
-                    <button className='btn btn-success'>Sign Up</button>
-                    <p>You agree to our terms and policies</p>
-                    <Link to="/" className='btn btn-default border text-decoration-none'>Back to Login</Link>
+
+                    <div className='form-group'>
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
+                            placeholder='Enter Password'
+                            name='password'
+                            onChange={handleInput}
+                        />
+                        {errors.password && <span className='error-text'>{errors.password}</span>}
+                    </div>
+
+                    <button className='auth-button'>Sign Up</button>
+                    <p className='auth-text'>You agree to our terms and policies</p>
+                    <Link to="/" className='auth-link'>Back to Login</Link>
                 </form>
             </div>
         </div>
