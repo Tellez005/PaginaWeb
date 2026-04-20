@@ -50,7 +50,7 @@ function Login() {
             axios.post('http://localhost:3001/login', values)
             .then(res => {
                 if (res.data === "Success") {
-                    navigate('/home');
+                    navigate('/');
                 } else {
                     alert("Account does not exist or wrong password entered")
                 }
