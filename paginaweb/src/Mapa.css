@@ -22,6 +22,8 @@ body {
   border-bottom: 1px solid #9fbcbc;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 20px;
   padding: 10px 20px;
   flex-shrink: 0;
 }
@@ -30,6 +32,121 @@ body {
   height: 75px;
   width: auto;
   object-fit: contain;
+  flex-shrink: 0;
+}
+
+.barraFiltros {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 720px;
+  margin-left: 10px;
+}
+
+.inputFiltro,
+.selectFiltro {
+  height: 42px;
+  border: 2px solid #9fbcbc;
+  border-radius: 12px;
+  background-color: #f7fbfb;
+  color: #183737;
+  font-size: 18px;
+  padding: 0 14px;
+  outline: none;
+}
+
+.inputFiltro {
+  flex: 1;
+  min-width: 180px;
+}
+
+.selectFiltro {
+  width: 180px;
+  cursor: pointer;
+}
+
+.inputFiltro:focus,
+.selectFiltro:focus {
+  border-color: #78a8a8;
+  box-shadow: 0 0 0 3px rgba(120, 168, 168, 0.18);
+}
+
+.botonLimpiar {
+  height: 42px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 12px;
+  background-color: #78a8a8;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+  flex-shrink: 0;
+}
+
+.botonLimpiar:hover {
+  background-color: #5f9393;
+}
+
+.botonLimpiar:active {
+  transform: scale(0.98);
+}
+
+.loginContainer {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.botonLogin {
+  height: 42px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 12px;
+  background-color: #78a8a8;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.botonLogin:hover {
+  background-color: #5f9393;
+}
+
+.botonLogin:active {
+  transform: scale(0.98);
+}
+
+.menuLogin {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #eef7f6;
+  border: 2px solid #9bbcbc;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  width: 170px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.menuLogin button {
+  padding: 12px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  color: #244949;
+  font-size: 16px;
+}
+
+.menuLogin button:hover {
+  background-color: #d9ecec;
 }
 
 .Contenido {
@@ -87,7 +204,8 @@ body {
   background-color: #ffffff;
 }
 
-.botonanimal div {
+.botonanimal div,
+.sinImagen {
   width: 100%;
   height: 100%;
   border: 2px dashed #9fbcbc;
@@ -98,6 +216,7 @@ body {
   justify-content: center;
   color: #4d6d6d;
   font-weight: bold;
+  text-align: center;
 }
 
 .titulo {
@@ -119,6 +238,43 @@ body {
   width: 100%;
 }
 
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.pagina {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 12px;
+  background-color: #78a8a8;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.pagina:hover {
+  background-color: #5f9393;
+}
+
+.pagina:active {
+  transform: scale(0.96);
+}
+
+.pagina.activa {
+  background-color: #183737;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(24, 55, 55, 0.3);
+}
+
 .App {
   width: 50%;
   height: 100%;
@@ -129,7 +285,6 @@ body {
   height: 100%;
 }
 
-/* Modal */
 .overlay {
   position: fixed;
   inset: 0;
@@ -193,7 +348,6 @@ body {
   background-color: #5f9393;
 }
 
-
 .Panel::-webkit-scrollbar {
   width: 10px;
 }
@@ -207,7 +361,6 @@ body {
   border-radius: 10px;
 }
 
-/* Responsive */
 @media (max-width: 1100px) {
   .almacendeposts {
     grid-template-columns: 1fr;
@@ -215,6 +368,34 @@ body {
 }
 
 @media (max-width: 900px) {
+  .Barra {
+    height: auto;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .barraFiltros {
+    order: 3;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    flex-wrap: wrap;
+  }
+
+  .inputFiltro {
+    flex: 1 1 220px;
+    width: 100%;
+  }
+
+  .selectFiltro {
+    flex: 1 1 180px;
+    width: auto;
+  }
+
+  .botonLimpiar {
+    flex: 0 0 auto;
+  }
+
   .Contenido {
     flex-direction: column;
   }
@@ -233,227 +414,4 @@ body {
   .App {
     height: 50%;
   }
-}
-
-.Barra {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 10px 16px;
-  box-sizing: border-box;
-}
-
-.loginContainer {
-  position: relative;
-  margin-left: auto;
-}
-
-.botonLogin {
-  background-color: #7eaeb0;
-  color: white;
-  border: 2px solid #4c6f70;
-  border-radius: 12px;
-  padding: 10px 18px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.menuLogin {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background-color: #eef7f6;
-  border: 2px solid #9bbcbc;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  width: 170px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  z-index: 1000;
-}
-
-.menuLogin button {
-  padding: 12px;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  font-weight: 600;
-  color: #244949;
-}
-
-.menuLogin button:hover {
-  background-color: #d9ecec;
-}
-.Barra img {
-  position: absolute;
-  left: 20px;
-  height: 78px;
-  width: auto;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-.Barra input[type="text"],
-.Barra select {
-  height: 42px;
-  border: 2px solid #9fbcbc;
-  border-radius: 12px;
-  background-color: #f7fbfb;
-  color: #183737;
-  font-size: 18px;
-  padding: 0 14px;
-  outline: none;
-}
-
-.Barra input[type="text"] {
-  width: 260px;
-}
-
-.Barra select {
-  min-width: 160px;
-  cursor: pointer;
-}
-
-.Barra input[type="text"]:focus,
-.Barra select:focus {
-  border-color: #78a8a8;
-  box-shadow: 0 0 0 3px rgba(120, 168, 168, 0.18);
-}
-
-.Barra button {
-  height: 42px;
-  padding: 0 18px;
-  border: none;
-  border-radius: 12px;
-  background-color: #78a8a8;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.Barra button:hover {
-  background-color: #5f9393;
-}
-
-.Barra button:active {
-  transform: scale(0.98);
-}
-
-@media (max-width: 900px) {
-  .Barra {
-    height: auto;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .Barra input[type="text"] {
-    width: 100%;
-    max-width: 260px;
-  }
-
-  .Barra select {
-    width: 100%;
-    max-width: 180px;
-  }
-}
-
-.paginacion {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-.pagina {
-  width: 42px;
-  height: 42px;
-  border: none;
-  border-radius: 12px;
-  background-color: #78a8a8;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-}
-
-.pagina:hover {
-  background-color: #5f9393;
-}
-
-.pagina:active {
-  transform: scale(0.96);
-}
-
-.pagina.activa {
-  background-color: #183737;
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(24, 55, 55, 0.3);
-}
-
-.Barra {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 20px;
-  gap: 20px;
-  box-sizing: border-box;
-}
-
-.cuadroSesion {
-  min-width: 220px;
-  background-color: #eef7f6;
-  border: 2px solid #9bbcbc;
-  border-radius: 16px;
-  padding: 12px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
-
-.textoSesion {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #244949;
-  text-align: center;
-}
-
-.textoSecundario {
-  margin-top: 4px;
-}
-
-.botonSesion,
-.botonRegistro {
-  text-decoration: none;
-  padding: 8px 14px;
-  border-radius: 10px;
-  font-weight: bold;
-  transition: 0.2s;
-  text-align: center;
-}
-
-.botonSesion {
-  background-color: #7eaeb0;
-  color: white;
-  border: 2px solid #4c6f70;
-}
-
-.botonRegistro {
-  background-color: white;
-  color: #2b4c4d;
-  border: 2px solid #7eaeb0;
-}
-
-.botonSesion:hover,
-.botonRegistro:hover {
-  transform: scale(1.03);
 }
