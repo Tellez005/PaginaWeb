@@ -9,9 +9,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Mapa />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/home" element={<Mapa />} />
+        <Route path="/login" element= {<Login />} /> 
         <Route path="/agregarMascota" element={<AgregarMascota/ >} />
       </Routes>
     </BrowserRouter>

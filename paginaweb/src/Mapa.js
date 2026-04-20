@@ -1,5 +1,6 @@
 import './App.css';
 import Map from './components/map/Map.jsx';
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import "./Mapa.css";
 
@@ -7,11 +8,12 @@ function Mapa() {
   const [mascotas, setMascotas] = useState([]);
   const [mostrarCuadro, setMostrarCuadro] = useState(null);
   const [mascotaSeleccionada, setMascotaSeleccionada] = useState(null);
-
   const [busqueda, setBusqueda] = useState("");
   const [razaFiltro, setRazaFiltro] = useState("Todas");
   const [paginaActual, setPaginaActual] = useState(1);
+  const [mostrarMenuLogin, setMostrarMenuLogin] = useState(false);
 
+  const navigate = useNavigate();
   const postsPorPagina = 15;
 
   useEffect(() => {
@@ -102,8 +104,7 @@ function Mapa() {
       } else if (razaFiltro === "Otra") {
         coincideRaza = !esRazaConocida(mascota.raza);
       } else {
-        coincideRaza =
-          mascota.raza?.toLowerCase() === razaFiltro.toLowerCase();
+        coincideRaza = mascota.raza?.toLowerCase() === razaFiltro.toLowerCase();
       }
 
       return coincideNombre && coincideRaza;
@@ -121,6 +122,16 @@ function Mapa() {
 
   function cambiarPagina(numero) {
     setPaginaActual(numero);
+  }
+
+  function irALogin() {
+    setMostrarMenuLogin(false);
+    navigate("/login");
+  }
+
+  function irARegistro() {
+    setMostrarMenuLogin(false);
+    navigate("/signup");
   }
 
   return (
@@ -158,6 +169,27 @@ function Mapa() {
           >
             Limpiar
           </button>
+        </div>
+
+        <div className="loginContainer">
+          <button
+            className="botonLogin"
+            onClick={() => setMostrarMenuLogin(!mostrarMenuLogin)}
+          >
+            Login
+          </button>
+
+          {mostrarMenuLogin && (
+            <div className="menuLogin">
+              <button onClick={irALogin}>
+                Iniciar sesión
+              </button>
+
+              <button onClick={irARegistro}>
+                Crear cuenta
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
