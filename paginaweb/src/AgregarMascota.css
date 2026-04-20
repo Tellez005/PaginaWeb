@@ -64,6 +64,22 @@ body {
   border-color: #5f9ea0;
 }
 
+.agregar-mascota-grupo select {
+  height: 45px;
+  padding: 10px 14px;
+  font-size: 18px;
+  border: 2px solid #9bbcbc;
+  border-radius: 10px;
+  outline: none;
+  box-sizing: border-box;
+  background-color: white;
+  color: #244848;
+}
+
+.agregar-mascota-grupo select:focus {
+  border-color: #5f9ea0;
+}
+
 .agregar-mascota-archivo {
   font-size: 17px;
 }

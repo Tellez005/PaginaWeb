@@ -193,7 +193,7 @@ body {
   background-color: #5f9393;
 }
 
-/* Scroll bonito opcional */
+
 .Panel::-webkit-scrollbar {
   width: 10px;
 }
@@ -233,4 +233,125 @@ body {
   .App {
     height: 50%;
   }
+}
+
+.Barra {
+  position: relative;
+  height: 110px;
+  background-color: #d9ecec;
+  border-bottom: 1px solid #9fbcbc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 18px;
+}
+.Barra img {
+  position: absolute;
+  left: 20px;
+  height: 78px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.Barra input[type="text"],
+.Barra select {
+  height: 42px;
+  border: 2px solid #9fbcbc;
+  border-radius: 12px;
+  background-color: #f7fbfb;
+  color: #183737;
+  font-size: 18px;
+  padding: 0 14px;
+  outline: none;
+}
+
+.Barra input[type="text"] {
+  width: 260px;
+}
+
+.Barra select {
+  min-width: 160px;
+  cursor: pointer;
+}
+
+.Barra input[type="text"]:focus,
+.Barra select:focus {
+  border-color: #78a8a8;
+  box-shadow: 0 0 0 3px rgba(120, 168, 168, 0.18);
+}
+
+.Barra button {
+  height: 42px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 12px;
+  background-color: #78a8a8;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.Barra button:hover {
+  background-color: #5f9393;
+}
+
+.Barra button:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 900px) {
+  .Barra {
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .Barra input[type="text"] {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  .Barra select {
+    width: 100%;
+    max-width: 180px;
+  }
+}
+
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.pagina {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 12px;
+  background-color: #78a8a8;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.pagina:hover {
+  background-color: #5f9393;
+}
+
+.pagina:active {
+  transform: scale(0.96);
+}
+
+.pagina.activa {
+  background-color: #183737;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(24, 55, 55, 0.3);
 }

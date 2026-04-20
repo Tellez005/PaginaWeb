@@ -92,6 +92,58 @@ function ClickEnMapa({
 
   return null;
 }
+const razasPerro = [
+  "Labrador Retriever",
+  "Pastor Alemán",
+  "Golden Retriever",
+  "Bulldog Francés",
+  "Bulldog Inglés",
+  "Poodle",
+  "Chihuahua",
+  "Beagle",
+  "Rottweiler",
+  "Yorkshire Terrier",
+  "Boxer",
+  "Dachshund",
+  "Siberian Husky",
+  "Doberman",
+  "Shih Tzu",
+  "Pug",
+  "Border Collie",
+  "Cocker Spaniel",
+  "Maltés",
+  "Boston Terrier",
+  "Akita",
+  "Pomerania",
+  "Pitbull",
+  "Gran Danés",
+  "Bóxer Alemán",
+  "Samoyedo",
+  "Basset Hound",
+  "Weimaraner",
+  "Pekinés",
+  "Mastín",
+  "Mastín Napolitano",
+  "San Bernardo",
+  "Bull Terrier",
+  "Fox Terrier",
+  "Jack Russell Terrier",
+  "Caniche",
+  "Galgo",
+  "Whippet",
+  "Shar Pei",
+  "Airedale Terrier",
+  "American Bully",
+  "Cane Corso",
+  "Setter Irlandés",
+  "Terranova",
+  "Papillón",
+  "Lhasa Apso",
+  "Havanese",
+  "Alaskan Malamute",
+  "Australian Shepherd",
+  "Criollo / Mestizo"
+];
 
 function AgregarMascota() {
   const [nombre, setNombre] = useState("");
@@ -245,11 +297,17 @@ function AgregarMascota() {
 
           <div className="agregar-mascota-grupo">
             <label>Raza</label>
-            <input
-              type="text"
+            <select
               value={raza}
               onChange={(e) => setRaza(e.target.value)}
-            />
+            >
+              <option value="">Selecciona una raza</option>
+              {razasPerro.map((razaItem, index) => (
+                <option key={index} value={razaItem}>
+                  {razaItem}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="agregar-mascota-grupo">
