@@ -1,5 +1,5 @@
-import './App.css';
-import Map from './components/map/Map.jsx';
+import "./App.css";
+import Map from "./components/map/Map.jsx";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import "./Mapa.css";
@@ -12,6 +12,7 @@ function Mapa() {
   const [razaFiltro, setRazaFiltro] = useState("Todas");
   const [paginaActual, setPaginaActual] = useState(1);
   const [mostrarMenuLogin, setMostrarMenuLogin] = useState(false);
+  const [usuarioLogueado, setUsuarioLogueado] = useState(null);
 
   const navigate = useNavigate();
   const postsPorPagina = 15;
@@ -26,6 +27,14 @@ function Mapa() {
       .catch((error) => {
         console.log("Error al obtener mascotas:", error);
       });
+  }, []);
+
+  useEffect(() => {
+    const usuarioGuardado = localStorage.getItem("usuario");
+
+    if (usuarioGuardado) {
+      setUsuarioLogueado(JSON.parse(usuarioGuardado));
+    }
   }, []);
 
   const razasBase = [
@@ -78,7 +87,7 @@ function Mapa() {
     "Airedale Terrier",
     "Collie",
     "Whippet",
-    "Kangal"
+    "Kangal",
   ];
 
   const opcionesFiltro = ["Todas", ...razasBase, "Otra"];
@@ -104,7 +113,8 @@ function Mapa() {
       } else if (razaFiltro === "Otra") {
         coincideRaza = !esRazaConocida(mascota.raza);
       } else {
-        coincideRaza = mascota.raza?.toLowerCase() === razaFiltro.toLowerCase();
+        coincideRaza =
+          mascota.raza?.toLowerCase() === razaFiltro.toLowerCase();
       }
 
       return coincideNombre && coincideRaza;
@@ -134,24 +144,34 @@ function Mapa() {
     navigate("/signup");
   }
 
-  return (
-    <div className='Contenedor'>
-      <div className='Barra'>
-        <img src='icons/Logo.jpeg' alt="Logo" />
+  function cerrarSesion() {
+    localStorage.removeItem("usuario");
+    setUsuarioLogueado(null);
+    setMostrarMenuLogin(false);
+  }
 
-        <div className='barraFiltros'>
+  function irACrearPost() {
+    navigate("/agregarMascota");
+  }
+
+  return (
+    <div className="Contenedor">
+      <div className="Barra">
+        <img src="icons/Logo.jpeg" alt="Logo" />
+
+        <div className="barraFiltros">
           <input
             type="text"
             placeholder="Buscar por nombre"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
-            className='inputFiltro'
+            className="inputFiltro"
           />
 
           <select
             value={razaFiltro}
             onChange={(e) => setRazaFiltro(e.target.value)}
-            className='selectFiltro'
+            className="selectFiltro"
           >
             {opcionesFiltro.map((raza, index) => (
               <option key={index} value={raza}>
@@ -161,7 +181,7 @@ function Mapa() {
           </select>
 
           <button
-            className='botonLimpiar'
+            className="botonLimpiar"
             onClick={() => {
               setBusqueda("");
               setRazaFiltro("Todas");
@@ -172,37 +192,49 @@ function Mapa() {
         </div>
 
         <div className="loginContainer">
-          <button
-            className="botonLogin"
-            onClick={() => setMostrarMenuLogin(!mostrarMenuLogin)}
-          >
-            Login
-          </button>
+          {usuarioLogueado ? (
+            <div className="usuarioLogueado">
+              <span className="textoUsuario">
+                Ya iniciaste sesión
+                {usuarioLogueado.nombre ? `: ${usuarioLogueado.nombre}` : ""}
+              </span>
 
-          {mostrarMenuLogin && (
-            <div className="menuLogin">
-              <button onClick={irALogin}>
-                Iniciar sesión
-              </button>
-
-              <button onClick={irARegistro}>
-                Crear cuenta
+              <button className="botonCerrarSesion" onClick={cerrarSesion}>
+                Cerrar sesión
               </button>
             </div>
+          ) : (
+            <>
+              <button
+                className="botonLogin"
+                onClick={() => setMostrarMenuLogin(!mostrarMenuLogin)}
+              >
+                Login
+              </button>
+
+              {mostrarMenuLogin && (
+                <div className="menuLogin">
+                  <button onClick={irALogin}>Iniciar sesión</button>
+                  <button onClick={irARegistro}>Crear cuenta</button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
 
-      <div className='Contenido'>
-        <div className='Panel'>
-          <div className='almacendeposts'>
+      <div className="Contenido">
+        <div className="Panel">
+          <div className="almacendeposts">
             {mascotasPaginadas.map((mascota) => (
-              <div className='posts' key={mascota.id}>
-                <div className='imagenMascota'>
+              <div className="posts" key={mascota.id}>
+                <div className="imagenMascota">
                   <button
-                    className='botonanimal'
+                    className="botonanimal"
                     onClick={() => {
-                      setMostrarCuadro(mostrarCuadro === mascota.id ? null : mascota.id);
+                      setMostrarCuadro(
+                        mostrarCuadro === mascota.id ? null : mascota.id
+                      );
                       setMascotaSeleccionada(mascota);
                     }}
                   >
@@ -212,12 +244,12 @@ function Mapa() {
                         alt={mascota.nombre}
                       />
                     ) : (
-                      <div className='sinImagen'>No hay imagen</div>
+                      <div className="sinImagen">No hay imagen</div>
                     )}
                   </button>
                 </div>
 
-                <div className='titulo'>
+                <div className="titulo">
                   <h3>Nombre: {mascota.nombre}</h3>
                 </div>
 
@@ -226,8 +258,8 @@ function Mapa() {
                 <p>Descripción: {mascota.descripcion}</p>
 
                 {mostrarCuadro === mascota.id && (
-                  <div className='overlay'>
-                    <div className='modelo'>
+                  <div className="overlay">
+                    <div className="modelo">
                       <h2>Información Adicional</h2>
                       <p>Nombre: {mascota.nombre}</p>
                       <p>Raza: {mascota.raza || "No especificada"}</p>
@@ -253,11 +285,13 @@ function Mapa() {
             ))}
           </div>
 
-          <div className='paginacion'>
+          <div className="paginacion">
             {Array.from({ length: totalPaginas }, (_, index) => (
               <button
                 key={index + 1}
-                className={paginaActual === index + 1 ? "pagina activa" : "pagina"}
+                className={
+                  paginaActual === index + 1 ? "pagina activa" : "pagina"
+                }
                 onClick={() => cambiarPagina(index + 1)}
               >
                 {index + 1}
@@ -270,6 +304,12 @@ function Mapa() {
           <Map mascotaSeleccionada={mascotaSeleccionada} />
         </div>
       </div>
+
+      {usuarioLogueado && (
+        <button className="botonCrearPostFlotante" onClick={irACrearPost}>
+          + Crear post
+        </button>
+      )}
     </div>
   );
 }

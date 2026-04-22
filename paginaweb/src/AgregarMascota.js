@@ -235,7 +235,8 @@ function AgregarMascota() {
         alert("Llena todos los campos y selecciona una ubicación en el mapa");
         return;
       }
-
+      const usuario = JSON.parse(localStorage.getItem("usuario")); 
+      const idUser = usuario.id_user; 
       const formData = new FormData();
       formData.append("nombre", nombre);
       formData.append("raza", raza);
@@ -244,6 +245,7 @@ function AgregarMascota() {
       formData.append("lng", lng);
       formData.append("descripcion", descripcion);
       formData.append("direccion", direccionSeleccionada);
+      formData.append("id_user",idUser);
 
       if (imagen) {
         formData.append("imagen", imagen);

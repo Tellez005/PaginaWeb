@@ -95,12 +95,18 @@ app.post('/login', (req, res) => {
 
     db.all(sql, values, (err, rows) => {
         if (err) {
-            return res.status(500).json("Error");
+            return res.status(500).json({ status: "Error" });
         }
+
         if (rows.length > 0) {
-            return res.json("Success");
+            return res.json({
+                status: "Success",
+                id_user: rows[0].id_user
+            });
         } else {
-            return res.json("Failed");
+            return res.json({
+                status: "Failed"
+            });
         }
     });
 });
@@ -130,15 +136,15 @@ app.post('/api/mascotas', upload.single('imagen'), (req, res) => {
     console.log('BODY:', req.body);
     console.log('FILE:', req.file);
 
-    const { nombre, raza, edad, lat, lng, descripcion } = req.body;
+    const { nombre, raza, edad, lat, lng, descripcion,id_user } = req.body;
     const imagen = req.file ? `/uploads/${req.file.filename}` : null;
 
     const insertar = `
-        INSERT INTO mascotas (nombre, raza, edad, lat, lng, descripcion, imagen)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO mascotas (nombre, raza, edad, lat, lng, descripcion, imagen, id_user)
+        VALUES (?, ?, ?, ?, ?, ?, ?,?)
     `;
 
-    db.run(insertar, [nombre, raza, edad, lat, lng, descripcion, imagen], function (error) {
+    db.run(insertar, [nombre, raza, edad, lat, lng, descripcion, imagen,id_user], function (error) {
         if (error) {
             console.log('ERROR SQLITE:', error);
             return res.status(500).json({

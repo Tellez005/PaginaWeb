@@ -1,109 +1,162 @@
-import React, { useEffect, useRef, useState }  from "react";
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap} from "react-leaflet";
-import 'leaflet/dist/leaflet.css'
-import L, { icon, marker } from "leaflet"; 
-var dogIcon = L.icon({
-    iconUrl: '/icons/Perro.png',
+import React, { useEffect, useRef, useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 
-    iconSize:     [85, 110], // size of the icon
-    shadowSize:   [50, 64], // size of the shadow
-    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-    shadowAnchor: [4, 62],  // the same for the shadow
-    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+const dogIcon = L.icon({
+  iconUrl: "/icons/Perro.png",
+  iconSize: [85, 110],
+  iconAnchor: [22, 94],
+  popupAnchor: [-3, -76]
 });
 
-var catIcon = L.icon({
-    iconUrl: '/icons/gatos.png',
-
-    iconSize:     [38, 95], // size of the icon
-    shadowSize:   [50, 64], // size of the shadow
-    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-    shadowAnchor: [4, 62],  // the same for the shadow
-    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+const catIcon = L.icon({
+  iconUrl: "/icons/gatos.png",
+  iconSize: [38, 95],
+  iconAnchor: [22, 94],
+  popupAnchor: [-3, -76]
 });
 
-var otherIcon = L.icon({
-    iconUrl: '/icons/Desaparecidos.png',
-    iconSize:     [38, 95], // size of the icon
-    shadowSize:   [50, 64], // size of the shadow
-    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-    shadowAnchor: [4, 62],  // the same for the shadow
-    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+const otherIcon = L.icon({
+  iconUrl: "/icons/Desaparecidos.png",
+  iconSize: [38, 95],
+  iconAnchor: [22, 94],
+  popupAnchor: [-3, -76]
 });
 
+function obtenerIcono(tipo) {
+  if (!tipo) return dogIcon;
+
+  const tipoLimpio = tipo.toLowerCase().trim();
+
+  if (
+    tipoLimpio.includes("perro") ||
+    tipoLimpio.includes("dog") ||
+    tipoLimpio.includes("canino")
+  ) {
+    return dogIcon;
+  }
+
+  if (
+    tipoLimpio.includes("gato") ||
+    tipoLimpio.includes("cat") ||
+    tipoLimpio.includes("felino")
+  ) {
+    return catIcon;
+  }
+
+  return otherIcon;
+}
 
 function MoverMapa({ mascotaSeleccionada }) {
-    const map = useMap();
+  const map = useMap();
 
-    useEffect(() => {
-        if (mascotaSeleccionada) {
-            map.setView([mascotaSeleccionada.lat, mascotaSeleccionada.lng], 16);
-        }
-    }, [mascotaSeleccionada, map]);
+  useEffect(() => {
+    if (
+      mascotaSeleccionada &&
+      mascotaSeleccionada.lat !== undefined &&
+      mascotaSeleccionada.lng !== undefined
+    ) {
+      const lat = Number(mascotaSeleccionada.lat);
+      const lng = Number(mascotaSeleccionada.lng);
 
-    return null;
+      if (!isNaN(lat) && !isNaN(lng)) {
+        map.setView([lat, lng], 16);
+      }
+    }
+  }, [mascotaSeleccionada, map]);
+
+  return null;
 }
 
-const Map = ({mascotaSeleccionada}) => {
+function Map({ mascotaSeleccionada }) {
+  const [geodata, setGeoData] = useState(null);
+  const [mascotasMapa, setMascotasMapa] = useState([]);
+  const mapRef = useRef(null);
 
-    const [geodata,setGeoData] = useState(null); 
-    const mapRef = useRef(); 
-    const position = [20.73822228680415, -103.4472214186193]; 
+  const position = [20.73822228680415, -103.4472214186193];
 
-    useEffect(() => {
-        fetch("/data/guadalajara_sublocs.geojson")
-        .then((res) =>res.json())
-        .then((data) => setGeoData(data)) 
-        .catch((err) => console.error("Failed to load GeoJSON", err))
-    })
+  useEffect(() => {
+    fetch("/data/guadalajara_sublocs.geojson")
+      .then((res) => res.json())
+      .then((data) => setGeoData(data))
+      .catch((err) => console.error("Failed to load GeoJSON", err));
+  }, []);
 
-    return(
-        <>
-        <div style={{height:"100%", width:"100%"}}>
-  
-            <MapContainer 
-            center={position} 
-            zoom={13} 
-            scrollWheelZoom={true}
-            ref={mapRef}
-            style={{height:"100%", width: "100%"}}
-            
+  useEffect(() => {
+    fetch("http://localhost:3001/mascotas")
+      .then((res) => res.json())
+      .then((data) => {
+        const mascotasValidas = data.filter((mascota) => {
+          const lat = Number(mascota.lat);
+          const lng = Number(mascota.lng);
+
+          return !isNaN(lat) && !isNaN(lng);
+        });
+
+        setMascotasMapa(mascotasValidas);
+      })
+      .catch((err) => {
+        console.log("Error al obtener mascotas para el mapa:", err);
+      });
+  }, []);
+
+  return (
+    <div style={{ height: "100%", width: "100%" }}>
+      <MapContainer
+        center={position}
+        zoom={13}
+        scrollWheelZoom={true}
+        ref={mapRef}
+        style={{ height: "100%", width: "100%" }}
+      >
+        <TileLayer
+          attribution='&copy; OpenStreetMap contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+
+        <MoverMapa mascotaSeleccionada={mascotaSeleccionada} />
+
+        {mascotasMapa.map((mascota) => {
+          const lat = Number(mascota.lat);
+          const lng = Number(mascota.lng);
+
+          return (
+            <Marker
+              key={mascota.id}
+              position={[lat, lng]}
+              icon={obtenerIcono(mascota.tipo || mascota.animal || mascota.especie)}
             >
-                <Marker position={[20.73822228680415, -103.4472214186193]} icon={dogIcon}>
-                    <Popup >Perro</Popup>
-                </Marker>
-                <Marker position={[20.73822228680415, -103.4569214186193]} icon={catIcon}>
-                    <Popup>
-                        <div>
-                            <div>
-                                <h3>Gato</h3>
-                            </div> 
-                        </div>
-                        </Popup>
-                </Marker>
-                <Marker position={[20.73822228680415, -103.4679214186193]} icon={otherIcon}>
-                    <Popup>Otro</Popup>
-                </Marker>
-                
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <MoverMapa mascotaSeleccionada={mascotaSeleccionada} />
-                {mascotaSeleccionada && (
-                <Marker position={[mascotaSeleccionada.lat, mascotaSeleccionada.lng]}
-                    icon={dogIcon}>; 
-                    <Popup>{mascotaSeleccionada.nombre}</Popup>
-                </Marker>
-                )}
-                {geodata && <GeoJSON data={geodata}/> }
-            </MapContainer>
-        </div>
-        </>
-    )
+              <Popup>
+                <div>
+                  <h3>{mascota.nombre}</h3>
+                  <p><strong>Raza:</strong> {mascota.raza || "No especificada"}</p>
+                  <p><strong>Edad:</strong> {mascota.edad || "No especificada"}</p>
+                  <p><strong>Descripción:</strong> {mascota.descripcion || "Sin descripción"}</p>
+
+                  {mascota.imagen && (
+                    <img
+                      src={`http://localhost:3001${mascota.imagen}`}
+                      alt={mascota.nombre}
+                      style={{
+                        width: "120px",
+                        height: "120px",
+                        objectFit: "cover",
+                        borderRadius: "10px",
+                        marginTop: "8px"
+                      }}
+                    />
+                  )}
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
+
+        {geodata && <GeoJSON data={geodata} />}
+      </MapContainer>
+    </div>
+  );
 }
 
-export default Map 
-
-
-
+export default Map;
