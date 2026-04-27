@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -69,37 +69,16 @@ function MoverMapa({ mascotaSeleccionada }) {
   return null;
 }
 
-function Map({ mascotaSeleccionada }) {
-  const [geodata, setGeoData] = useState(null);
-  const [mascotasMapa, setMascotasMapa] = useState([]);
+function Map({ mascotaSeleccionada, mascotas = [] }) {
   const mapRef = useRef(null);
-
   const position = [20.73822228680415, -103.4472214186193];
 
-  useEffect(() => {
-    fetch("/data/guadalajara_sublocs.geojson")
-      .then((res) => res.json())
-      .then((data) => setGeoData(data))
-      .catch((err) => console.error("Failed to load GeoJSON", err));
-  }, []);
+  const mascotasValidas = mascotas.filter((mascota) => {
+    const lat = Number(mascota.lat);
+    const lng = Number(mascota.lng);
 
-  useEffect(() => {
-    fetch("http://localhost:3001/mascotas")
-      .then((res) => res.json())
-      .then((data) => {
-        const mascotasValidas = data.filter((mascota) => {
-          const lat = Number(mascota.lat);
-          const lng = Number(mascota.lng);
-
-          return !isNaN(lat) && !isNaN(lng);
-        });
-
-        setMascotasMapa(mascotasValidas);
-      })
-      .catch((err) => {
-        console.log("Error al obtener mascotas para el mapa:", err);
-      });
-  }, []);
+    return !isNaN(lat) && !isNaN(lng);
+  });
 
   return (
     <div style={{ height: "100%", width: "100%" }}>
@@ -117,7 +96,7 @@ function Map({ mascotaSeleccionada }) {
 
         <MoverMapa mascotaSeleccionada={mascotaSeleccionada} />
 
-        {mascotasMapa.map((mascota) => {
+        {mascotasValidas.map((mascota) => {
           const lat = Number(mascota.lat);
           const lng = Number(mascota.lng);
 
@@ -153,7 +132,7 @@ function Map({ mascotaSeleccionada }) {
           );
         })}
 
-        {geodata && <GeoJSON data={geodata} />}
+        <GeoJSON data={{ type: "FeatureCollection", features: [] }} />
       </MapContainer>
     </div>
   );

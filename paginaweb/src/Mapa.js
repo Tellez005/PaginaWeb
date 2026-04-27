@@ -1,10 +1,12 @@
 import "./App.css";
 import Map from "./components/map/Map.jsx";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import "./Mapa.css";
 
 function Mapa() {
+  const [kmFiltro, setKmFiltro] = useState("");
+  const [miUbicacion, setMiUbicacion] = useState(null);
   const [mascotas, setMascotas] = useState([]);
   const [mostrarCuadro, setMostrarCuadro] = useState(null);
   const [mascotaSeleccionada, setMascotaSeleccionada] = useState(null);
@@ -16,6 +18,22 @@ function Mapa() {
 
   const navigate = useNavigate();
   const postsPorPagina = 15;
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setMiUbicacion({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.log("Error al obtener ubicación:", error);
+        }
+      );
+    }
+  }, []);
 
   useEffect(() => {
     fetch("http://localhost:3001/mascotas")
@@ -100,26 +118,47 @@ function Mapa() {
     );
   }
 
-  const mascotasFiltradas = useMemo(() => {
-    return mascotas.filter((mascota) => {
-      const coincideNombre = mascota.nombre
-        ?.toLowerCase()
-        .includes(busqueda.toLowerCase());
+  function calcularDistanciaKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
 
-      let coincideRaza = false;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
 
-      if (razaFiltro === "Todas") {
-        coincideRaza = true;
-      } else if (razaFiltro === "Otra") {
-        coincideRaza = !esRazaConocida(mascota.raza);
-      } else {
-        coincideRaza =
-          mascota.raza?.toLowerCase() === razaFiltro.toLowerCase();
-      }
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
 
-      return coincideNombre && coincideRaza;
-    });
-  }, [mascotas, busqueda, razaFiltro]);
+  const mascotasFiltradas = mascotas.filter((mascota) => {
+    const nombreCoincide = mascota.nombre
+      ?.toLowerCase()
+      .includes(busqueda.toLowerCase());
+
+    const razaCoincide =
+      razaFiltro === "Todas" ||
+      mascota.raza?.toLowerCase() === razaFiltro.toLowerCase() ||
+      (razaFiltro === "Otra" && !esRazaConocida(mascota.raza));
+
+    let kmCoincide = true;
+
+    if (kmFiltro !== "" && miUbicacion) {
+      const distancia = calcularDistanciaKm(
+        miUbicacion.lat,
+        miUbicacion.lng,
+        Number(mascota.lat),
+        Number(mascota.lng)
+      );
+
+      kmCoincide = distancia <= Number(kmFiltro);
+    }
+
+    return nombreCoincide && razaCoincide && kmCoincide;
+  });
 
   const totalPaginas = Math.ceil(mascotasFiltradas.length / postsPorPagina);
   const indiceInicial = (paginaActual - 1) * postsPorPagina;
@@ -128,7 +167,7 @@ function Mapa() {
 
   useEffect(() => {
     setPaginaActual(1);
-  }, [busqueda, razaFiltro]);
+  }, [busqueda, razaFiltro, kmFiltro]);
 
   function cambiarPagina(numero) {
     setPaginaActual(numero);
@@ -180,11 +219,20 @@ function Mapa() {
             ))}
           </select>
 
+          <input
+            type="number"
+            placeholder="Km"
+            value={kmFiltro}
+            onChange={(e) => setKmFiltro(e.target.value)}
+            className="inputFiltro"
+          />
+
           <button
             className="botonLimpiar"
             onClick={() => {
               setBusqueda("");
               setRazaFiltro("Todas");
+              setKmFiltro("");
             }}
           >
             Limpiar
@@ -301,7 +349,10 @@ function Mapa() {
         </div>
 
         <div className="App">
-          <Map mascotaSeleccionada={mascotaSeleccionada} />
+          <Map
+            mascotaSeleccionada={mascotaSeleccionada}
+            mascotas={mascotasFiltradas}
+          />
         </div>
       </div>
 
