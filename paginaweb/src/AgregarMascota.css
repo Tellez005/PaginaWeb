@@ -49,21 +49,7 @@ body {
   color: #244848;
 }
 
-.agregar-mascota-grupo input {
-  height: 45px;
-  padding: 10px 14px;
-  font-size: 18px;
-  border: 2px solid #9bbcbc;
-  border-radius: 10px;
-  outline: none;
-  box-sizing: border-box;
-  background-color: white;
-}
-
-.agregar-mascota-grupo input:focus {
-  border-color: #5f9ea0;
-}
-
+.agregar-mascota-grupo input,
 .agregar-mascota-grupo select {
   height: 45px;
   padding: 10px 14px;
@@ -76,8 +62,59 @@ body {
   color: #244848;
 }
 
+.agregar-mascota-grupo input:focus,
 .agregar-mascota-grupo select:focus {
   border-color: #5f9ea0;
+}
+
+.selector-tipo-contenedor {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.selector-tipo-titulo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #244848;
+}
+
+.selector-tipo-opciones {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.tipo-card {
+  height: 115px;
+  border: 2px solid #9bbcbc;
+  border-radius: 16px;
+  background-color: white;
+  color: #244848;
+  font-size: 36px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.tipo-card span {
+  font-size: 20px;
+}
+
+.tipo-card:hover {
+  background-color: #d9ecec;
+  transform: scale(1.03);
+}
+
+.tipo-card.activo {
+  background-color: #78a8a8;
+  color: white;
+  border-color: #4f8585;
 }
 
 .agregar-mascota-archivo {
@@ -141,4 +178,25 @@ body {
   font-size: 14px;
   color: #333;
   line-height: 1.4;
+  box-sizing: border-box;
+}
+
+.mensaje-mapa {
+  background-color: #fff8d9;
+  border: 1px solid #d8c36a;
+  color: #5f531a;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+@media (max-width: 650px) {
+  .selector-tipo-opciones {
+    grid-template-columns: 1fr;
+  }
+
+  .agregar-mascota-titulo {
+    font-size: 32px;
+  }
 }

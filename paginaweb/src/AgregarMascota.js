@@ -47,12 +47,7 @@ function ClickEnMapa({
           }
         );
 
-        if (!response.ok) {
-          throw new Error(`Error HTTP ${response.status}`);
-        }
-
         const data = await response.json();
-        console.log("Respuesta reverse geocoding:", data);
 
         const direccion =
           data.display_name ||
@@ -69,8 +64,6 @@ function ClickEnMapa({
           setPosicionMarcador([nuevaLat, nuevaLng]);
         }
       } catch (error) {
-        console.error("Error al obtener dirección del mapa:", error);
-
         const direccionRespaldo = `Ubicación aproximada: ${nuevaLat.toFixed(6)}, ${nuevaLng.toFixed(6)}`;
 
         const confirmar = window.confirm(
@@ -91,6 +84,7 @@ function ClickEnMapa({
 
   return null;
 }
+
 const razasPerro = [
   "Labrador Retriever",
   "Pastor Alemán",
@@ -116,35 +110,45 @@ const razasPerro = [
   "Pomerania",
   "Pitbull",
   "Gran Danés",
-  "Bóxer Alemán",
   "Samoyedo",
   "Basset Hound",
   "Weimaraner",
-  "Pekinés",
-  "Mastín",
-  "Mastín Napolitano",
-  "San Bernardo",
   "Bull Terrier",
-  "Fox Terrier",
-  "Jack Russell Terrier",
-  "Caniche",
   "Galgo",
-  "Whippet",
   "Shar Pei",
-  "Airedale Terrier",
   "American Bully",
   "Cane Corso",
-  "Setter Irlandés",
-  "Terranova",
-  "Papillón",
-  "Lhasa Apso",
-  "Havanese",
-  "Alaskan Malamute",
-  "Australian Shepherd",
   "Criollo / Mestizo"
 ];
 
+const razasGato = [
+  "Mestizo",
+  "Siamés",
+  "Persa",
+  "Maine Coon",
+  "Bengalí",
+  "Sphynx",
+  "Ragdoll",
+  "Azul Ruso",
+  "British Shorthair",
+  "Angora",
+  "Otra"
+];
+
+const tamanosPerro = [
+  "Enano",
+  "Chico",
+  "Mediano",
+  "Grande",
+  "Enorme"
+];
+
 function AgregarMascota() {
+  const [tipo, setTipo] = useState("");
+  const [idTipo, setIdTipo] = useState("");
+  const [otroAnimal, setOtroAnimal] = useState("");
+  const [tamano, setTamano] = useState("");
+
   const [nombre, setNombre] = useState("");
   const [raza, setRaza] = useState("");
   const [edad, setEdad] = useState("");
@@ -171,8 +175,6 @@ function AgregarMascota() {
         const latActual = position.coords.latitude;
         const lngActual = position.coords.longitude;
 
-        console.log("Ubicación actual:", latActual, lngActual);
-
         setUbicacionActual([latActual, lngActual]);
 
         try {
@@ -185,12 +187,7 @@ function AgregarMascota() {
             }
           );
 
-          if (!response.ok) {
-            throw new Error(`Error HTTP ${response.status}`);
-          }
-
           const data = await response.json();
-          console.log("Dirección actual:", data);
 
           const direccion =
             data.display_name ||
@@ -198,14 +195,12 @@ function AgregarMascota() {
 
           setDireccionActual(direccion);
         } catch (error) {
-          console.error("Error obteniendo dirección actual:", error);
           setDireccionActual(
             `No se pudo encontrar tu dirección exacta. Ubicación aproximada: ${latActual.toFixed(6)}, ${lngActual.toFixed(6)}`
           );
         }
       },
-      (error) => {
-        console.error("Error de geolocalización:", error);
+      () => {
         setDireccionActual("No se pudo obtener tu ubicación actual");
       },
       {
@@ -215,6 +210,18 @@ function AgregarMascota() {
       }
     );
   }, []);
+
+  function cambiarTipo(valor) {
+    setTipo(valor);
+    setRaza("");
+    setTamano("");
+    setOtroAnimal("");
+
+    if (valor === "Perro") setIdTipo("1");
+    else if (valor === "Gato") setIdTipo("2");
+    else if (valor === "Otro") setIdTipo("3");
+    else setIdTipo("");
+  }
 
   function handleImagen(e) {
     const archivo = e.target.files[0];
@@ -231,21 +238,48 @@ function AgregarMascota() {
 
   async function addMascota() {
     try {
-      if (!nombre || !raza || !edad || !lat || !lng || !descripcion) {
+      if (!tipo || !nombre || !edad || !lat || !lng || !descripcion) {
         alert("Llena todos los campos y selecciona una ubicación en el mapa");
         return;
       }
-      const usuario = JSON.parse(localStorage.getItem("usuario")); 
-      const idUser = usuario.id_user; 
+
+      if (tipo !== "Otro" && !raza) {
+        alert("Selecciona una raza");
+        return;
+      }
+
+      if (tipo === "Perro" && !tamano) {
+        alert("Selecciona el tamaño del perro");
+        return;
+      }
+
+      if (tipo === "Otro" && !otroAnimal) {
+        alert("Escribe qué animal es");
+        return;
+      }
+
+      const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+      if (!usuario) {
+        alert("Necesitas iniciar sesión");
+        return;
+      }
+
       const formData = new FormData();
+
       formData.append("nombre", nombre);
-      formData.append("raza", raza);
+      formData.append("raza", tipo === "Otro" ? "" : raza);
       formData.append("edad", edad);
       formData.append("lat", lat);
       formData.append("lng", lng);
       formData.append("descripcion", descripcion);
       formData.append("direccion", direccionSeleccionada);
-      formData.append("id_user",idUser);
+      formData.append("id_user", usuario.id_user);
+
+      formData.append("id_tipo", idTipo);
+      formData.append("tipo", tipo);
+      formData.append("tamano", tipo === "Perro" ? tamano : "");
+      formData.append("otro_animal", tipo === "Otro" ? otroAnimal : "");
 
       if (imagen) {
         formData.append("imagen", imagen);
@@ -265,6 +299,10 @@ function AgregarMascota() {
 
       alert("Mascota guardada correctamente");
 
+      setTipo("");
+      setIdTipo("");
+      setOtroAnimal("");
+      setTamano("");
       setNombre("");
       setRaza("");
       setEdad("");
@@ -287,121 +325,183 @@ function AgregarMascota() {
         <h1 className="agregar-mascota-titulo">Agregar Mascota</h1>
 
         <div className="agregar-mascota-formulario">
-          <div className="agregar-mascota-grupo">
-            <label>Nombre</label>
-            <input
-              type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-            />
-          </div>
+          <div className="selector-tipo-contenedor">
+            <label className="selector-tipo-titulo">Primero selecciona el animal</label>
 
-          <div className="agregar-mascota-grupo">
-            <label>Raza</label>
-            <select
-              value={raza}
-              onChange={(e) => setRaza(e.target.value)}
-            >
-              <option value="">Selecciona una raza</option>
-              {razasPerro.map((razaItem, index) => (
-                <option key={index} value={razaItem}>
-                  {razaItem}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="agregar-mascota-grupo">
-            <label>Edad</label>
-            <input
-              type="number"
-              value={edad}
-              onChange={(e) => setEdad(e.target.value)}
-            />
-          </div>
-
-          <div className="agregar-mascota-grupo">
-            <label>Descripción</label>
-            <input
-              type="text"
-              value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-            />
-          </div>
-
-          <div className="agregar-mascota-grupo">
-            <label>Tu ubicación actual</label>
-            <div className="direccion-box">
-              {direccionActual}
-            </div>
-          </div>
-
-          <div className="agregar-mascota-grupo">
-            <label>Selecciona la ubicación en el mapa</label>
-            <div className="mapa-contenedor">
-              <MapContainer
-                center={ubicacionActual}
-                zoom={15}
-                scrollWheelZoom={true}
-                style={{ height: "100%", width: "100%" }}
+            <div className="selector-tipo-opciones">
+              <button
+                type="button"
+                className={tipo === "Perro" ? "tipo-card activo" : "tipo-card"}
+                onClick={() => cambiarTipo("Perro")}
               >
-                <CambiarVistaMapa center={ubicacionActual} />
+                🐶
+                <span>Perro</span>
+              </button>
 
-                <TileLayer
-                  attribution="&copy; OpenStreetMap contributors"
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              <button
+                type="button"
+                className={tipo === "Gato" ? "tipo-card activo" : "tipo-card"}
+                onClick={() => cambiarTipo("Gato")}
+              >
+                🐱
+                <span>Gato</span>
+              </button>
+
+              <button
+                type="button"
+                className={tipo === "Otro" ? "tipo-card activo" : "tipo-card"}
+                onClick={() => cambiarTipo("Otro")}
+              >
+                🐾
+                <span>Otro</span>
+              </button>
+            </div>
+          </div>
+
+          {tipo !== "" && (
+            <>
+              {tipo === "Otro" && (
+                <div className="agregar-mascota-grupo">
+                  <label>¿Qué animal es?</label>
+                  <input
+                    type="text"
+                    value={otroAnimal}
+                    onChange={(e) => setOtroAnimal(e.target.value)}
+                    placeholder="Ej. conejo, ave, hámster"
+                  />
+                </div>
+              )}
+
+              <div className="agregar-mascota-grupo">
+                <label>Nombre</label>
+                <input
+                  type="text"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
                 />
+              </div>
 
-                <ClickEnMapa
-                  setLat={setLat}
-                  setLng={setLng}
-                  setDireccionSeleccionada={setDireccionSeleccionada}
-                  setPosicionMarcador={setPosicionMarcador}
-                  setCargandoDireccion={setCargandoDireccion}
+              {tipo !== "Otro" && (
+                <div className="agregar-mascota-grupo">
+                  <label>Raza</label>
+                  <select value={raza} onChange={(e) => setRaza(e.target.value)}>
+                    <option value="">Selecciona una raza</option>
+                    {(tipo === "Perro" ? razasPerro : razasGato).map((razaItem, index) => (
+                      <option key={index} value={razaItem}>
+                        {razaItem}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {tipo === "Perro" && (
+                <div className="agregar-mascota-grupo">
+                  <label>Tamaño</label>
+                  <select value={tamano} onChange={(e) => setTamano(e.target.value)}>
+                    <option value="">Selecciona tamaño</option>
+                    {tamanosPerro.map((tamanoItem, index) => (
+                      <option key={index} value={tamanoItem}>
+                        {tamanoItem}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="agregar-mascota-grupo">
+                <label>Edad</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={edad}
+                  onChange={(e) => {
+                    if (Number(e.target.value) < 0) return;
+                    setEdad(e.target.value);
+                  }}
                 />
+              </div>
 
-                {posicionMarcador && (
-                  <Marker position={posicionMarcador}>
-                    <Popup>{direccionSeleccionada}</Popup>
-                  </Marker>
-                )}
-              </MapContainer>
-            </div>
-          </div>
+              <div className="agregar-mascota-grupo">
+                <label>Descripción</label>
+                <input
+                  type="text"
+                  value={descripcion}
+                  onChange={(e) => setDescripcion(e.target.value)}
+                />
+              </div>
 
-          {cargandoDireccion && (
-            <div className="mensaje-mapa">
-              Buscando dirección...
-            </div>
+              <div className="agregar-mascota-grupo">
+                <label>Tu ubicación actual</label>
+                <div className="direccion-box">{direccionActual}</div>
+              </div>
+
+              <div className="agregar-mascota-grupo">
+                <label>Selecciona la ubicación en el mapa</label>
+                <div className="mapa-contenedor">
+                  <MapContainer
+                    center={ubicacionActual}
+                    zoom={15}
+                    scrollWheelZoom={true}
+                    style={{ height: "100%", width: "100%" }}
+                  >
+                    <CambiarVistaMapa center={ubicacionActual} />
+
+                    <TileLayer
+                      attribution="&copy; OpenStreetMap contributors"
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+
+                    <ClickEnMapa
+                      setLat={setLat}
+                      setLng={setLng}
+                      setDireccionSeleccionada={setDireccionSeleccionada}
+                      setPosicionMarcador={setPosicionMarcador}
+                      setCargandoDireccion={setCargandoDireccion}
+                    />
+
+                    {posicionMarcador && (
+                      <Marker position={posicionMarcador}>
+                        <Popup>{direccionSeleccionada}</Popup>
+                      </Marker>
+                    )}
+                  </MapContainer>
+                </div>
+              </div>
+
+              {cargandoDireccion && (
+                <div className="mensaje-mapa">Buscando dirección...</div>
+              )}
+
+              <div className="agregar-mascota-grupo">
+                <label>Dirección seleccionada</label>
+                <div className="direccion-box">
+                  {direccionSeleccionada || "Haz click en el mapa para elegir una ubicación"}
+                </div>
+              </div>
+
+              <div className="agregar-mascota-grupo">
+                <label>Imagen</label>
+                <input
+                  className="agregar-mascota-archivo"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImagen}
+                />
+              </div>
+
+              {preview && (
+                <div className="agregar-mascota-preview">
+                  <p>Vista previa</p>
+                  <img src={preview} alt="Vista previa" />
+                </div>
+              )}
+
+              <button className="agregar-mascota-boton" onClick={addMascota}>
+                Mandar Datos
+              </button>
+            </>
           )}
-
-          <div className="agregar-mascota-grupo">
-            <label>Dirección seleccionada</label>
-            <div className="direccion-box">
-              {direccionSeleccionada || "Haz click en el mapa para elegir una ubicación"}
-            </div>
-          </div>
-
-          <div className="agregar-mascota-grupo">
-            <label>Imagen</label>
-            <input
-              className="agregar-mascota-archivo"
-              type="file"
-              accept="image/*"
-              onChange={handleImagen}
-            />
-          </div>
-
-          {preview && (
-            <div className="agregar-mascota-preview">
-              <p>Vista previa</p>
-              <img src={preview} alt="Vista previa" />
-            </div>
-          )}
-
-          <button className="agregar-mascota-boton" onClick={addMascota}>
-            Mandar Datos
-          </button>
         </div>
       </div>
     </div>

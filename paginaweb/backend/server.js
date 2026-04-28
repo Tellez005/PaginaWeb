@@ -131,34 +131,62 @@ app.get('/mascotas', (req, res) => {
     });
 });
 
-// Guardar mascota
 app.post('/api/mascotas', upload.single('imagen'), (req, res) => {
     console.log('BODY:', req.body);
     console.log('FILE:', req.file);
 
-    const { nombre, raza, edad, lat, lng, descripcion,id_user } = req.body;
+    const {
+        nombre,
+        raza,
+        edad,
+        lat,
+        lng,
+        descripcion,
+        id_user,
+        id_tipo,
+        tamano,
+        otro_animal
+    } = req.body;
+
     const imagen = req.file ? `/uploads/${req.file.filename}` : null;
 
     const insertar = `
-        INSERT INTO mascotas (nombre, raza, edad, lat, lng, descripcion, imagen, id_user)
-        VALUES (?, ?, ?, ?, ?, ?, ?,?)
+        INSERT INTO mascotas 
+        (nombre, raza, edad, lat, lng, descripcion, imagen, id_user, id_tipo, tamano, otro_animal)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    db.run(insertar, [nombre, raza, edad, lat, lng, descripcion, imagen,id_user], function (error) {
-        if (error) {
-            console.log('ERROR SQLITE:', error);
-            return res.status(500).json({
-                message: 'Error, no se guardó en el sistema',
-                error: error.message
+    db.run(
+        insertar,
+        [
+            nombre,
+            raza,
+            edad,
+            lat,
+            lng,
+            descripcion,
+            imagen,
+            id_user,
+            id_tipo,
+            tamano,
+            otro_animal
+        ],
+        function (error) {
+            if (error) {
+                console.log('ERROR SQLITE:', error);
+                return res.status(500).json({
+                    message: 'Error, no se guardó en el sistema',
+                    error: error.message
+                });
+            }
+
+            res.status(201).json({
+                mensaje: 'Se guardó la mascota',
+                id: this.lastID,
+                imagen: imagen
             });
         }
-
-        res.status(201).json({
-            mensaje: 'Se guardó la mascota',
-            id: this.lastID,
-            imagen: imagen
-        });
-    });
+    );
 });
 
 app.listen(PORT, () => {
