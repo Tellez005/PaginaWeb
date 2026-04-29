@@ -129,7 +129,7 @@ app.put('/mascotas/:id', (req, res) => {
         }
     );
 });
-
+//A
 app.delete('/mascotas/:id', (req, res) => {
     const idMascota = req.params.id;
     const { id_user } = req.body;

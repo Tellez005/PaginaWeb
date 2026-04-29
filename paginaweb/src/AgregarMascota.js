@@ -489,7 +489,6 @@ function AgregarMascota() {
                   onChange={handleImagen}
                 />
               </div>
-
               {preview && (
                 <div className="agregar-mascota-preview">
                   <p>Vista previa</p>

@@ -169,7 +169,6 @@ function Map({ mascotaSeleccionada, mascotas = [] }) {
                   </p>
 
                   <p><strong>Tipo:</strong> {tipoMascota}</p>
-
                   {tipoMascota === "Otro" ? (
                     <p><strong>Animal:</strong> {mascota.otro_animal || "No especificado"}</p>
                   ) : (

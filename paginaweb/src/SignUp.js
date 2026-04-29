@@ -34,7 +34,7 @@ function Validation(values) {
     }
     return error;
 }
-
+//A
 function SignUp() {
     const [values, setValues] = useState({
         name: '',
