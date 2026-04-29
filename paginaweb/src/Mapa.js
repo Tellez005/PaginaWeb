@@ -7,6 +7,7 @@ import "./Mapa.css";
 function Mapa() {
   const [kmFiltro, setKmFiltro] = useState("");
   const [tipoFiltro, setTipoFiltro] = useState("Todos");
+  const [estadoFiltro, setEstadoFiltro] = useState("Todos");
   const [razaFiltro, setRazaFiltro] = useState("Todas");
   const [tamanoFiltro, setTamanoFiltro] = useState("Todos");
   const [otroAnimalFiltro, setOtroAnimalFiltro] = useState("");
@@ -23,91 +24,33 @@ function Mapa() {
   const postsPorPagina = 15;
 
   const razasPerro = [
-    "Mestizo",
-    "Chihuahua",
-    "Schnauzer",
-    "Golden Retriever",
-    "Labrador Retriever",
-    "Pug",
-    "Yorkshire Terrier",
-    "Poodle",
-    "Pastor Alemán",
-    "Bulldog Francés",
-    "Bulldog Inglés",
-    "Pitbull",
-    "Husky Siberiano",
-    "Beagle",
-    "Rottweiler",
-    "Shih Tzu",
-    "Maltés",
-    "Cocker Spaniel",
-    "Doberman",
-    "Dálmata",
-    "Boxer",
-    "Border Collie",
-    "Akita Inu",
-    "Samoyedo",
-    "Weimaraner",
-    "Basset Hound",
-    "Gran Danés",
-    "Chow Chow",
-    "Jack Russell Terrier",
-    "Bull Terrier",
-    "Pomerania",
-    "Shar Pei",
-    "Setter Irlandés",
-    "Galgo",
-    "Terrier Escocés",
-    "Fox Terrier",
-    "Boston Terrier",
-    "American Staffordshire Terrier",
-    "Cane Corso",
-    "Mastín Napolitano",
-    "Xoloitzcuintle",
-    "Perro sin pelo peruano",
-    "Chihuahua de pelo largo",
-    "Pastor Belga",
-    "Vizsla",
-    "Pointer Inglés",
-    "Airedale Terrier",
-    "Collie",
-    "Whippet",
-    "Kangal",
-    "Otra"
+    "Mestizo", "Chihuahua", "Schnauzer", "Golden Retriever",
+    "Labrador Retriever", "Pug", "Yorkshire Terrier", "Poodle",
+    "Pastor Alemán", "Bulldog Francés", "Bulldog Inglés", "Pitbull",
+    "Husky Siberiano", "Beagle", "Rottweiler", "Shih Tzu",
+    "Maltés", "Cocker Spaniel", "Doberman", "Dálmata", "Boxer",
+    "Border Collie", "Akita Inu", "Samoyedo", "Weimaraner",
+    "Basset Hound", "Gran Danés", "Chow Chow", "Jack Russell Terrier",
+    "Bull Terrier", "Pomerania", "Shar Pei", "Setter Irlandés",
+    "Galgo", "Terrier Escocés", "Fox Terrier", "Boston Terrier",
+    "American Staffordshire Terrier", "Cane Corso", "Mastín Napolitano",
+    "Xoloitzcuintle", "Perro sin pelo peruano", "Chihuahua de pelo largo",
+    "Pastor Belga", "Vizsla", "Pointer Inglés", "Airedale Terrier",
+    "Collie", "Whippet", "Kangal", "Otra"
   ];
 
   const razasGato = [
-    "Mestizo",
-    "Siamés",
-    "Persa",
-    "Maine Coon",
-    "Bengalí",
-    "Sphynx",
-    "Ragdoll",
-    "Azul Ruso",
-    "British Shorthair",
-    "Angora",
-    "Otra"
+    "Mestizo", "Siamés", "Persa", "Maine Coon", "Bengalí",
+    "Sphynx", "Ragdoll", "Azul Ruso", "British Shorthair",
+    "Angora", "Otra"
   ];
 
-  const tamanosPerro = [
-    "Enano",
-    "Chico",
-    "Mediano",
-    "Grande",
-    "Enorme"
-  ];
+  const tamanosPerro = ["Enano", "Chico", "Mediano", "Grande", "Enorme"];
 
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log(
-            "UBICACIÓN DE LA APP:",
-            position.coords.latitude,
-            position.coords.longitude
-          );
-
           setMiUbicacion({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -126,15 +69,7 @@ function Mapa() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3001/mascotas")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Mascotas recibidas:", data);
-        setMascotas(data);
-      })
-      .catch((error) => {
-        console.log("Error al obtener mascotas:", error);
-      });
+    cargarMascotas();
   }, []);
 
   useEffect(() => {
@@ -144,6 +79,18 @@ function Mapa() {
       setUsuarioLogueado(JSON.parse(usuarioGuardado));
     }
   }, []);
+
+  function cargarMascotas() {
+    fetch("http://localhost:3001/mascotas")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Mascotas recibidas:", data);
+        setMascotas(data);
+      })
+      .catch((error) => {
+        console.log("Error al obtener mascotas:", error);
+      });
+  }
 
   function calcularDistanciaKm(lat1, lon1, lat2, lon2) {
     const R = 6371;
@@ -168,11 +115,73 @@ function Mapa() {
     return "";
   }
 
+  function obtenerEstado(mascota) {
+    if (!mascota.estado) return "perdido";
+    return mascota.estado.toLowerCase();
+  }
+
+  function puedeEditarPost(mascota) {
+    if (!usuarioLogueado) return false;
+
+    return (
+      Number(usuarioLogueado.id_user) === Number(mascota.id_user)
+    );
+  }
+
+  function cambiarEstadoMascota(mascota, nuevoEstado) {
+    if (!usuarioLogueado) {
+      alert("Debes iniciar sesión");
+      return;
+    }
+
+    if (!puedeEditarPost(mascota)) {
+      alert("Solo la persona que creó el post puede cambiar el estado");
+      return;
+    }
+
+    fetch(`http://localhost:3001/mascotas/${mascota.id_mascota}/estado`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        estado: nuevoEstado,
+        id_user: usuarioLogueado.id_user,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Estado actualizado:", data);
+
+        setMascotas((mascotasActuales) =>
+          mascotasActuales.map((m) =>
+            m.id_mascota === mascota.id_mascota
+              ? { ...m, estado: nuevoEstado }
+              : m
+          )
+        );
+
+        if (mascotaSeleccionada?.id_mascota === mascota.id_mascota) {
+          setMascotaSeleccionada({
+            ...mascotaSeleccionada,
+            estado: nuevoEstado,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log("Error al actualizar estado:", error);
+      });
+  }
+
   const mascotasFiltradas = mascotas.filter((mascota) => {
     const tipoMascota = obtenerTipoMascota(mascota);
+    const estadoMascota = obtenerEstado(mascota);
 
     const tipoCoincide =
       tipoFiltro === "Todos" || tipoMascota === tipoFiltro;
+
+    const estadoCoincide =
+      estadoFiltro === "Todos" || estadoMascota === estadoFiltro;
 
     const razaCoincide =
       razaFiltro === "Todas" ||
@@ -202,18 +211,18 @@ function Mapa() {
     }
 
     if (tipoFiltro === "Perro") {
-      return tipoCoincide && razaCoincide && tamanoCoincide && kmCoincide;
+      return tipoCoincide && estadoCoincide && razaCoincide && tamanoCoincide && kmCoincide;
     }
 
     if (tipoFiltro === "Gato") {
-      return tipoCoincide && razaCoincide && kmCoincide;
+      return tipoCoincide && estadoCoincide && razaCoincide && kmCoincide;
     }
 
     if (tipoFiltro === "Otro") {
-      return tipoCoincide && otroAnimalCoincide && kmCoincide;
+      return tipoCoincide && estadoCoincide && otroAnimalCoincide && kmCoincide;
     }
 
-    return tipoCoincide && kmCoincide;
+    return tipoCoincide && estadoCoincide && kmCoincide;
   });
 
   const totalPaginas = Math.ceil(mascotasFiltradas.length / postsPorPagina);
@@ -223,7 +232,7 @@ function Mapa() {
 
   useEffect(() => {
     setPaginaActual(1);
-  }, [tipoFiltro, razaFiltro, tamanoFiltro, otroAnimalFiltro, kmFiltro]);
+  }, [tipoFiltro, estadoFiltro, razaFiltro, tamanoFiltro, otroAnimalFiltro, kmFiltro]);
 
   function cambiarPagina(numero) {
     setPaginaActual(numero);
@@ -251,6 +260,7 @@ function Mapa() {
 
   function limpiarFiltros() {
     setTipoFiltro("Todos");
+    setEstadoFiltro("Todos");
     setRazaFiltro("Todas");
     setTamanoFiltro("Todos");
     setOtroAnimalFiltro("");
@@ -273,10 +283,20 @@ function Mapa() {
             }}
             className="selectFiltro"
           >
-            <option value="Todos">Todos</option>
+            <option value="Todos">Todos los animales</option>
             <option value="Perro">Perro</option>
             <option value="Gato">Gato</option>
             <option value="Otro">Otro</option>
+          </select>
+
+          <select
+            value={estadoFiltro}
+            onChange={(e) => setEstadoFiltro(e.target.value)}
+            className="selectFiltro"
+          >
+            <option value="Todos">Todos los estados</option>
+            <option value="perdido">Perdidos</option>
+            <option value="encontrado">Encontrados</option>
           </select>
 
           <input
@@ -328,7 +348,7 @@ function Mapa() {
         </div>
       </div>
 
-      {tipoFiltro !== "Todos" && (
+      {(tipoFiltro !== "Todos" || estadoFiltro !== "Todos") && (
         <div className="barraSecundaria">
           {tipoFiltro === "Perro" && (
             <>
@@ -384,93 +404,180 @@ function Mapa() {
               className="inputFiltro inputOtroAnimal"
             />
           )}
+
+          {estadoFiltro !== "Todos" && (
+            <div className="textoFiltroEstado">
+              Mostrando posts:{" "}
+              <strong>
+                {estadoFiltro === "perdido" ? "Perdidos" : "Encontrados"}
+              </strong>
+            </div>
+          )}
         </div>
       )}
 
       <div className="Contenido">
         <div className="Panel">
           <div className="almacendeposts">
-            {mascotasPaginadas.map((mascota) => (
-              <div className="posts" key={mascota.id_mascota || mascota.id}>
-                <div className="imagenMascota">
-                  <button
-                    className="botonanimal"
-                    onClick={() => {
-                      setMostrarCuadro(
-                        mostrarCuadro === mascota.id_mascota
-                          ? null
-                          : mascota.id_mascota
-                      );
-                      setMascotaSeleccionada(mascota);
-                    }}
-                  >
-                    {mascota.imagen ? (
-                      <img
-                        src={`http://localhost:3001${mascota.imagen}`}
-                        alt={mascota.nombre}
-                      />
-                    ) : (
-                      <div className="sinImagen">No hay imagen</div>
+            {mascotasPaginadas.map((mascota) => {
+              const estadoMascota = obtenerEstado(mascota);
+
+              return (
+                <div
+                  className={
+                    estadoMascota === "encontrado"
+                      ? "posts postEncontrado"
+                      : "posts postPerdido"
+                  }
+                  key={mascota.id_mascota || mascota.id}
+                >
+                  <div className="estadoPost">
+                    <span
+                      className={
+                        estadoMascota === "encontrado"
+                          ? "etiquetaEstado encontrado"
+                          : "etiquetaEstado perdido"
+                      }
+                    >
+                      {estadoMascota === "encontrado"
+                        ? "Encontrado"
+                        : "Perdido"}
+                    </span>
+
+                    {puedeEditarPost(mascota) && (
+                      <select
+                        className="selectEstadoPost"
+                        value={estadoMascota}
+                        onChange={(e) =>
+                          cambiarEstadoMascota(mascota, e.target.value)
+                        }
+                      >
+                        <option value="perdido">Perdido</option>
+                        <option value="encontrado">Encontrado</option>
+                      </select>
                     )}
-                  </button>
-                </div>
+                  </div>
 
-                <div className="titulo">
-                  <h3>Nombre: {mascota.nombre}</h3>
-                </div>
-
-                <p>Tipo: {obtenerTipoMascota(mascota) || "No especificado"}</p>
-
-                {obtenerTipoMascota(mascota) === "Otro" ? (
-                  <p>Animal: {mascota.otro_animal || "No especificado"}</p>
-                ) : (
-                  <p>Raza: {mascota.raza || "No especificada"}</p>
-                )}
-
-                {obtenerTipoMascota(mascota) === "Perro" && (
-                  <p>Tamaño: {mascota.tamano || "No especificado"}</p>
-                )}
-
-                <p>Edad: {mascota.edad}</p>
-                <p>Descripción: {mascota.descripcion}</p>
-
-                {mostrarCuadro === mascota.id_mascota && (
-                  <div className="overlay">
-                    <div className="modelo">
-                      <h2>Información Adicional</h2>
-                      <p>Nombre: {mascota.nombre}</p>
-                      <p>Tipo: {obtenerTipoMascota(mascota)}</p>
-
-                      {obtenerTipoMascota(mascota) === "Otro" ? (
-                        <p>Animal: {mascota.otro_animal}</p>
-                      ) : (
-                        <p>Raza: {mascota.raza || "No especificada"}</p>
-                      )}
-
-                      {obtenerTipoMascota(mascota) === "Perro" && (
-                        <p>Tamaño: {mascota.tamano || "No especificado"}</p>
-                      )}
-
-                      <p>Edad: {mascota.edad}</p>
-                      <p>Descripción: {mascota.descripcion}</p>
-
+                  <div className="imagenMascota">
+                    <button
+                      className="botonanimal"
+                      onClick={() => {
+                        setMostrarCuadro(
+                          mostrarCuadro === mascota.id_mascota
+                            ? null
+                            : mascota.id_mascota
+                        );
+                        setMascotaSeleccionada(mascota);
+                      }}
+                    >
                       {mascota.imagen ? (
                         <img
                           src={`http://localhost:3001${mascota.imagen}`}
                           alt={mascota.nombre}
                         />
                       ) : (
-                        <p>No hay imagen</p>
+                        <div className="sinImagen">No hay imagen</div>
                       )}
-
-                      <button onClick={() => setMostrarCuadro(null)}>
-                        Cerrar
-                      </button>
-                    </div>
+                    </button>
                   </div>
-                )}
-              </div>
-            ))}
+
+                  <div className="titulo">
+                    <h3>Nombre: {mascota.nombre}</h3>
+                  </div>
+
+                  <p>Tipo: {obtenerTipoMascota(mascota) || "No especificado"}</p>
+
+                  {obtenerTipoMascota(mascota) === "Otro" ? (
+                    <p>Animal: {mascota.otro_animal || "No especificado"}</p>
+                  ) : (
+                    <p>Raza: {mascota.raza || "No especificada"}</p>
+                  )}
+
+                  {obtenerTipoMascota(mascota) === "Perro" && (
+                    <p>Tamaño: {mascota.tamano || "No especificado"}</p>
+                  )}
+
+                  <p>Edad: {mascota.edad}</p>
+                  <p>Descripción: {mascota.descripcion}</p>
+
+                  {!puedeEditarPost(mascota) && usuarioLogueado && (
+                    <p className="textoNoEditable">
+                      Solo el creador puede cambiar el estado.
+                    </p>
+                  )}
+
+                  {mostrarCuadro === mascota.id_mascota && (
+                    <div className="overlay">
+                      <div
+                        className={
+                          estadoMascota === "encontrado"
+                            ? "modelo modeloEncontrado"
+                            : "modelo modeloPerdido"
+                        }
+                      >
+                        <h2>Información Adicional</h2>
+
+                        <span
+                          className={
+                            estadoMascota === "encontrado"
+                              ? "etiquetaEstado encontrado"
+                              : "etiquetaEstado perdido"
+                          }
+                        >
+                          {estadoMascota === "encontrado"
+                            ? "Encontrado"
+                            : "Perdido"}
+                        </span>
+
+                        <p>Nombre: {mascota.nombre}</p>
+                        <p>Tipo: {obtenerTipoMascota(mascota)}</p>
+
+                        {obtenerTipoMascota(mascota) === "Otro" ? (
+                          <p>Animal: {mascota.otro_animal}</p>
+                        ) : (
+                          <p>Raza: {mascota.raza || "No especificada"}</p>
+                        )}
+
+                        {obtenerTipoMascota(mascota) === "Perro" && (
+                          <p>Tamaño: {mascota.tamano || "No especificado"}</p>
+                        )}
+
+                        <p>Edad: {mascota.edad}</p>
+                        <p>Descripción: {mascota.descripcion}</p>
+
+                        {puedeEditarPost(mascota) && (
+                          <div className="cambiarEstadoModal">
+                            <label>Estado del post:</label>
+                            <select
+                              value={estadoMascota}
+                              onChange={(e) =>
+                                cambiarEstadoMascota(mascota, e.target.value)
+                              }
+                            >
+                              <option value="perdido">Perdido</option>
+                              <option value="encontrado">Encontrado</option>
+                            </select>
+                          </div>
+                        )}
+
+                        {mascota.imagen ? (
+                          <img
+                            src={`http://localhost:3001${mascota.imagen}`}
+                            alt={mascota.nombre}
+                          />
+                        ) : (
+                          <p>No hay imagen</p>
+                        )}
+
+                        <button onClick={() => setMostrarCuadro(null)}>
+                          Cerrar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           <div className="paginacion">

@@ -189,6 +189,27 @@ app.post('/api/mascotas', upload.single('imagen'), (req, res) => {
     );
 });
 
+app.put('/mascotas/:id/estado', (req, res) => {
+    const idMascota = req.params.id;
+    const { estado, id_user } = req.body;
+
+    db.run(
+        `UPDATE mascotas SET TEXT = ? WHERE id_mascota = ? AND id_user = ?`,
+        [estado, idMascota, id_user],
+        function (err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+
+            if (this.changes === 0) {
+                return res.status(403).json({ error: 'No tienes permiso' });
+            }
+
+            res.json({ mensaje: 'Estado actualizado correctamente' });
+        }
+    );
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

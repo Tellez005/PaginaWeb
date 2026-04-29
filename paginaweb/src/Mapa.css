@@ -41,7 +41,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 14px;
-  max-width: 720px;
+  max-width: 900px;
   margin-left: 10px;
 }
 
@@ -64,14 +64,14 @@ body {
   border-radius: 12px;
   background-color: #f7fbfb;
   color: #183737;
-  font-size: 18px;
+  font-size: 17px;
   padding: 0 14px;
   outline: none;
 }
 
 .inputFiltro {
   flex: 1;
-  min-width: 180px;
+  min-width: 130px;
 }
 
 .inputOtroAnimal {
@@ -79,7 +79,7 @@ body {
 }
 
 .selectFiltro {
-  width: 220px;
+  width: 210px;
   cursor: pointer;
 }
 
@@ -96,7 +96,7 @@ body {
   border-radius: 12px;
   background-color: #78a8a8;
   color: white;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s ease;
@@ -109,6 +109,15 @@ body {
 
 .botonLimpiar:active {
   transform: scale(0.98);
+}
+
+.textoFiltroEstado {
+  font-size: 17px;
+  color: #183737;
+  background-color: #eef7f6;
+  border: 2px solid #9fbcbc;
+  border-radius: 12px;
+  padding: 9px 16px;
 }
 
 .loginContainer {
@@ -226,10 +235,59 @@ body {
 
 .posts {
   background-color: #eef7f6;
-  border: 2px solid #9fbcbc;
   border-radius: 18px;
   padding: 16px;
   box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
+  transition: 0.2s ease;
+}
+
+.postPerdido {
+  border: 4px solid #e53935;
+}
+
+.postEncontrado {
+  border: 4px solid #2e7d32;
+}
+
+.posts:hover {
+  transform: translateY(-2px);
+}
+
+.estadoPost {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.etiquetaEstado {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.etiquetaEstado.perdido {
+  background-color: #e53935;
+}
+
+.etiquetaEstado.encontrado {
+  background-color: #2e7d32;
+}
+
+.selectEstadoPost {
+  height: 34px;
+  border: 2px solid #9fbcbc;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #183737;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0 8px;
+  cursor: pointer;
 }
 
 .imagenMascota {
@@ -290,6 +348,15 @@ body {
   color: #204444;
   text-align: left;
   width: 100%;
+}
+
+.textoNoEditable {
+  font-size: 14px !important;
+  color: #6a7777 !important;
+  background-color: #f7fbfb;
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center !important;
 }
 
 .paginacion {
@@ -354,11 +421,18 @@ body {
   width: 100%;
   max-width: 500px;
   background-color: #eef7f6;
-  border: 2px solid #9fbcbc;
   border-radius: 18px;
   padding: 24px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   text-align: center;
+}
+
+.modeloPerdido {
+  border: 4px solid #e53935;
+}
+
+.modeloEncontrado {
+  border: 4px solid #2e7d32;
 }
 
 .modelo h2 {
@@ -400,6 +474,30 @@ body {
 
 .modelo button:hover {
   background-color: #5f9393;
+}
+
+.cambiarEstadoModal {
+  margin: 15px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.cambiarEstadoModal label {
+  color: #183737;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.cambiarEstadoModal select {
+  height: 38px;
+  border: 2px solid #9fbcbc;
+  border-radius: 10px;
+  background-color: white;
+  color: #183737;
+  font-size: 16px;
+  padding: 0 12px;
 }
 
 .Panel::-webkit-scrollbar {
@@ -502,5 +600,10 @@ body {
   .usuarioLogueado {
     width: 100%;
     justify-content: flex-start;
+  }
+
+  .estadoPost {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
