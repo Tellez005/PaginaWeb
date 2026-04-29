@@ -85,6 +85,75 @@ app.post('/signup', (req, res) => {
     });
 });
 
+app.put('/mascotas/:id', (req, res) => {
+    const idMascota = req.params.id;
+
+    const {
+        nombre,
+        raza,
+        edad,
+        descripcion,
+        tamano,
+        otro_animal,
+        estado,
+        id_user
+    } = req.body;
+
+    db.run(
+        `UPDATE mascotas
+         SET nombre = ?, raza = ?, edad = ?, descripcion = ?, tamano = ?, otro_animal = ?, estado = ?
+         WHERE id_mascota = ? AND id_user = ?`,
+        [
+            nombre,
+            raza,
+            edad,
+            descripcion,
+            tamano,
+            otro_animal,
+            estado,
+            idMascota,
+            id_user
+        ],
+        function (err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+
+            if (this.changes === 0) {
+                return res.status(403).json({
+                    error: 'Solo el creador puede editar este post'
+                });
+            }
+
+            res.json({ mensaje: 'Post actualizado correctamente' });
+        }
+    );
+});
+
+app.delete('/mascotas/:id', (req, res) => {
+    const idMascota = req.params.id;
+    const { id_user } = req.body;
+
+    db.run(
+        `DELETE FROM mascotas WHERE id_mascota = ? AND id_user = ?`,
+        [idMascota, id_user],
+        function (err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+
+            if (this.changes === 0) {
+                return res.status(403).json({
+                    error: 'Solo el creador puede eliminar este post'
+                });
+            }
+
+            res.json({ mensaje: 'Post eliminado correctamente' });
+        }
+    );
+});
+
+
 // Login POST
 app.post('/login', (req, res) => {
     const sql = 'SELECT * FROM users WHERE email = ? AND password = ?';

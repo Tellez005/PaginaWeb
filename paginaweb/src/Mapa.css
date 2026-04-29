@@ -6,6 +6,7 @@ body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   background-color: #d9ecec;
+  color: #173d3d;
 }
 
 .Contenedor {
@@ -16,6 +17,8 @@ body {
   background-color: #d9ecec;
 }
 
+/* Barra superior */
+
 .Barra {
   height: 95px;
   background-color: #d9ecec;
@@ -23,8 +26,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding: 10px 20px;
+  gap: 18px;
+  padding: 10px 18px;
   flex-shrink: 0;
 }
 
@@ -42,7 +45,6 @@ body {
   justify-content: center;
   gap: 14px;
   max-width: 900px;
-  margin-left: 10px;
 }
 
 .barraSecundaria {
@@ -71,15 +73,15 @@ body {
 
 .inputFiltro {
   flex: 1;
-  min-width: 130px;
+  min-width: 150px;
 }
 
 .inputOtroAnimal {
-  max-width: 420px;
+  max-width: 430px;
 }
 
 .selectFiltro {
-  width: 210px;
+  width: 220px;
   cursor: pointer;
 }
 
@@ -91,7 +93,7 @@ body {
 
 .botonLimpiar {
   height: 42px;
-  padding: 0 18px;
+  padding: 0 20px;
   border: none;
   border-radius: 12px;
   background-color: #78a8a8;
@@ -99,25 +101,10 @@ body {
   font-size: 17px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s ease;
-  flex-shrink: 0;
 }
 
 .botonLimpiar:hover {
   background-color: #5f9393;
-}
-
-.botonLimpiar:active {
-  transform: scale(0.98);
-}
-
-.textoFiltroEstado {
-  font-size: 17px;
-  color: #183737;
-  background-color: #eef7f6;
-  border: 2px solid #9fbcbc;
-  border-radius: 12px;
-  padding: 9px 16px;
 }
 
 .loginContainer {
@@ -127,25 +114,32 @@ body {
   align-items: center;
 }
 
-.botonLogin {
+.botonLogin,
+.botonCerrarSesion {
   height: 42px;
   padding: 0 18px;
   border: none;
   border-radius: 12px;
-  background-color: #78a8a8;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s ease;
+}
+
+.botonLogin {
+  background-color: #78a8a8;
 }
 
 .botonLogin:hover {
   background-color: #5f9393;
 }
 
-.botonLogin:active {
-  transform: scale(0.98);
+.botonCerrarSesion {
+  background-color: #ff385c;
+}
+
+.botonCerrarSesion:hover {
+  background-color: #e12f50;
 }
 
 .menuLogin {
@@ -157,10 +151,10 @@ body {
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  width: 170px;
+  width: 175px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  z-index: 1000;
+  z-index: 4000;
 }
 
 .menuLogin button {
@@ -181,8 +175,6 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
 }
 
 .textoUsuario {
@@ -191,26 +183,7 @@ body {
   color: #183737;
 }
 
-.botonCerrarSesion {
-  height: 42px;
-  padding: 0 16px;
-  border: none;
-  border-radius: 12px;
-  background-color: #ff385c;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.botonCerrarSesion:hover {
-  background-color: #e12f50;
-}
-
-.botonCerrarSesion:active {
-  transform: scale(0.98);
-}
+/*  Contenido en general  */
 
 .Contenido {
   flex: 1;
@@ -221,14 +194,26 @@ body {
 .Panel {
   width: 50%;
   background-color: #d3e7e7;
-  padding: 20px;
+  padding: 18px;
   overflow-y: auto;
   border-right: 1px solid #9fbcbc;
 }
 
+.App {
+  width: 50%;
+  height: 100%;
+}
+
+.App > * {
+  width: 100%;
+  height: 100%;
+}
+
+/* Almacen / Posts */
+
 .almacendeposts {
   display: grid;
-  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  grid-template-columns: repeat(2, minmax(250px, 1fr));
   gap: 20px;
   align-items: start;
 }
@@ -237,8 +222,13 @@ body {
   background-color: #eef7f6;
   border-radius: 18px;
   padding: 16px;
-  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
-  transition: 0.2s ease;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.1);
+  min-height: 430px;
+  position: static;
+}
+
+.posts:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
 }
 
 .postPerdido {
@@ -249,10 +239,6 @@ body {
   border: 4px solid #2e7d32;
 }
 
-.posts:hover {
-  transform: translateY(-2px);
-}
-
 .estadoPost {
   display: flex;
   justify-content: space-between;
@@ -261,9 +247,15 @@ body {
   margin-bottom: 12px;
 }
 
+.accionesPost {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .etiquetaEstado {
   display: inline-block;
-  padding: 7px 12px;
+  padding: 7px 13px;
   border-radius: 999px;
   color: white;
   font-size: 15px;
@@ -279,7 +271,7 @@ body {
 }
 
 .selectEstadoPost {
-  height: 34px;
+  height: 36px;
   border: 2px solid #9fbcbc;
   border-radius: 10px;
   background-color: #ffffff;
@@ -290,6 +282,27 @@ body {
   cursor: pointer;
 }
 
+.botonEditarPost,
+.botonConfigModal {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: #78a8a8;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.botonEditarPost:hover,
+.botonConfigModal:hover {
+  background-color: #5f9393;
+}
+
 .imagenMascota {
   display: flex;
   flex-direction: column;
@@ -298,8 +311,8 @@ body {
 
 .botonanimal {
   width: 100%;
-  max-width: 220px;
-  height: 180px;
+  max-width: 240px;
+  height: 190px;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -338,7 +351,7 @@ body {
 
 .titulo h3 {
   margin: 0;
-  font-size: 20px;
+  font-size: 21px;
   color: #183737;
 }
 
@@ -350,21 +363,166 @@ body {
   width: 100%;
 }
 
-.textoNoEditable {
-  font-size: 14px !important;
-  color: #6a7777 !important;
-  background-color: #f7fbfb;
-  border-radius: 10px;
-  padding: 8px;
-  text-align: center !important;
+/* Modal general  */
+
+.overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  z-index: 99999 !important;
+  overflow: hidden;
 }
+.modelo {
+  width: 800px;
+  max-width: 96vw;
+  height: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: #eef7f6;
+  border-radius: 24px;
+  padding: 50px 70px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+  text-align: center;
+}
+
+.modeloPerdido {
+  border: 4px solid #e53935;
+}
+
+.modeloEncontrado {
+  border: 4px solid #2e7d32;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.modelo h2,
+.modalHeader h2 {
+  font-size: 48px;
+}
+
+.botonConfigModal {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.modelo p {
+  margin: 14px 0;
+  font-size: 28px;
+  color: #204444;
+  text-align: left;
+}
+
+.modelo img {
+  width: 100%;
+  max-width: 520px;
+  height: 330px;
+  object-fit: cover;
+  border: 3px solid #9fbcbc;
+  border-radius: 16px;
+  margin: 24px auto 10px auto;
+  background-color: white;
+  display: block;
+}
+
+.modelo button {
+  margin-top: 12px;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 14px;
+  background-color: #78a8a8;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modelo button:hover {
+  background-color: #5f9393;
+}
+
+/* Modal para editar */
+
+.modeloEditar {
+  width: 780px;
+  max-width: 94vw;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 36px 44px;
+  border: 4px solid #9fbcbc;
+  background-color: #eef7f6;
+  border-radius: 22px;
+}
+
+.modeloEditar h2 {
+  font-size: 46px;
+  margin: 0 0 28px 0;
+}
+
+.inputEditar,
+.textareaEditar {
+  width: 100%;
+  margin: 10px 0;
+  padding: 16px 18px;
+  border: 3px solid #9fbcbc;
+  border-radius: 16px;
+  font-size: 22px;
+  background-color: white;
+  color: #183737;
+  outline: none;
+}
+
+.inputEditar:focus,
+.textareaEditar:focus {
+  border-color: #78a8a8;
+  box-shadow: 0 0 0 4px rgba(120, 168, 168, 0.18);
+}
+
+.textareaEditar {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.botonesEditar {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.botonesEditar button {
+  min-width: 140px;
+}
+
+.botonEliminarPost {
+  background-color: #e53935 !important;
+}
+
+.botonEliminarPost:hover {
+  background-color: #c62828 !important;
+}
+
+/* Paginacion */
 
 .paginacion {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  margin: 20px 0;
+  margin: 22px 0;
   flex-wrap: wrap;
 }
 
@@ -378,7 +536,6 @@ body {
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
@@ -386,132 +543,12 @@ body {
   background-color: #5f9393;
 }
 
-.pagina:active {
-  transform: scale(0.96);
-}
-
 .pagina.activa {
   background-color: #183737;
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(24, 55, 55, 0.3);
 }
 
-.App {
-  width: 50%;
-  height: 100%;
-}
-
-.App > * {
-  width: 100%;
-  height: 100%;
-}
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.35);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  z-index: 1000;
-}
-
-.modelo {
-  width: 100%;
-  max-width: 500px;
-  background-color: #eef7f6;
-  border-radius: 18px;
-  padding: 24px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-  text-align: center;
-}
-
-.modeloPerdido {
-  border: 4px solid #e53935;
-}
-
-.modeloEncontrado {
-  border: 4px solid #2e7d32;
-}
-
-.modelo h2 {
-  margin-top: 0;
-  margin-bottom: 18px;
-  color: #183737;
-  font-size: 30px;
-}
-
-.modelo p {
-  margin: 10px 0;
-  font-size: 18px;
-  color: #204444;
-}
-
-.modelo img {
-  width: 240px;
-  max-width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border: 2px solid #9fbcbc;
-  border-radius: 14px;
-  margin: 15px 0;
-  background-color: white;
-}
-
-.modelo button {
-  margin-top: 10px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 12px;
-  background-color: #78a8a8;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.modelo button:hover {
-  background-color: #5f9393;
-}
-
-.cambiarEstadoModal {
-  margin: 15px auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-}
-
-.cambiarEstadoModal label {
-  color: #183737;
-  font-size: 17px;
-  font-weight: bold;
-}
-
-.cambiarEstadoModal select {
-  height: 38px;
-  border: 2px solid #9fbcbc;
-  border-radius: 10px;
-  background-color: white;
-  color: #183737;
-  font-size: 16px;
-  padding: 0 12px;
-}
-
-.Panel::-webkit-scrollbar {
-  width: 10px;
-}
-
-.Panel::-webkit-scrollbar-track {
-  background: #d3e7e7;
-}
-
-.Panel::-webkit-scrollbar-thumb {
-  background: #9fbcbc;
-  border-radius: 10px;
-}
+/* Boton crear post */
 
 .botonCrearPostFlotante {
   position: fixed;
@@ -527,21 +564,60 @@ body {
   font-weight: bold;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  transition: 0.2s ease;
 }
 
 .botonCrearPostFlotante:hover {
   background-color: #e12f50;
-  transform: translateY(-2px);
 }
 
-.botonCrearPostFlotante:active {
-  transform: scale(0.98);
+/* ubicacion en el mapa */
+
+.miUbicacionIcono {
+  background: transparent;
+  border: none;
 }
 
-@media (max-width: 1100px) {
+.puntoUbicacion {
+  width: 22px;
+  height: 22px;
+  background-color: #1e88e5;
+  border: 4px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.3);
+}
+
+/* SCROLL */
+
+.Panel::-webkit-scrollbar,
+.modelo::-webkit-scrollbar,
+.modeloEditar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.Panel::-webkit-scrollbar-track,
+.modelo::-webkit-scrollbar-track,
+.modeloEditar::-webkit-scrollbar-track {
+  background: #d3e7e7;
+  border-radius: 10px;
+}
+
+.Panel::-webkit-scrollbar-thumb,
+.modelo::-webkit-scrollbar-thumb,
+.modeloEditar::-webkit-scrollbar-thumb {
+  background: #9fbcbc;
+  border-radius: 10px;
+}
+
+/* El responsive */
+
+@media (max-width: 1200px) {
   .almacendeposts {
     grid-template-columns: 1fr;
+  }
+
+  .modeloEditar {
+    width: 720px;
+    max-width: 94vw;
   }
 }
 
@@ -549,14 +625,12 @@ body {
   .Barra {
     height: auto;
     flex-wrap: wrap;
-    align-items: center;
   }
 
   .barraFiltros {
     order: 3;
     width: 100%;
     max-width: 100%;
-    margin-left: 0;
     flex-wrap: wrap;
   }
 
@@ -564,18 +638,10 @@ body {
     flex-wrap: wrap;
   }
 
-  .inputFiltro {
-    flex: 1 1 220px;
-    width: 100%;
-  }
-
+  .inputFiltro,
   .selectFiltro {
-    flex: 1 1 180px;
-    width: auto;
-  }
-
-  .botonLimpiar {
-    flex: 0 0 auto;
+    flex: 1 1 200px;
+    width: 100%;
   }
 
   .Contenido {
@@ -588,22 +654,35 @@ body {
   }
 
   .Panel {
-    height: 50%;
+    height: 52%;
     border-right: none;
     border-bottom: 1px solid #9fbcbc;
   }
 
   .App {
-    height: 50%;
+    height: 48%;
   }
 
-  .usuarioLogueado {
-    width: 100%;
-    justify-content: flex-start;
+  .modelo {
+    width: 94vw;
+    padding: 24px;
   }
 
-  .estadoPost {
-    flex-direction: column;
-    align-items: flex-start;
+  .modelo h2,
+  .modalHeader h2 {
+    font-size: 34px;
+  }
+
+  .modelo p {
+    font-size: 19px;
+  }
+
+  .modeloEditar h2 {
+    font-size: 38px;
+  }
+
+  .inputEditar,
+  .textareaEditar {
+    font-size: 19px;
   }
 }

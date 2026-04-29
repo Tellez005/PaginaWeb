@@ -20,6 +20,17 @@ function Mapa() {
   const [mostrarMenuLogin, setMostrarMenuLogin] = useState(false);
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
 
+  const [postEditando, setPostEditando] = useState(null);
+  const [formEditar, setFormEditar] = useState({
+    nombre: "",
+    raza: "",
+    edad: "",
+    descripcion: "",
+    tamano: "",
+    otro_animal: "",
+    estado: "perdido"
+  });
+
   const navigate = useNavigate();
   const postsPorPagina = 15;
 
@@ -53,7 +64,7 @@ function Mapa() {
         (position) => {
           setMiUbicacion({
             lat: position.coords.latitude,
-            lng: position.coords.longitude,
+            lng: position.coords.longitude
           });
         },
         (error) => {
@@ -62,7 +73,7 @@ function Mapa() {
         {
           enableHighAccuracy: true,
           timeout: 10000,
-          maximumAge: 0,
+          maximumAge: 0
         }
       );
     }
@@ -84,7 +95,6 @@ function Mapa() {
     fetch("http://localhost:3001/mascotas")
       .then((res) => res.json())
       .then((data) => {
-        console.log("Mascotas recibidas:", data);
         setMascotas(data);
       })
       .catch((error) => {
@@ -122,66 +132,104 @@ function Mapa() {
 
   function puedeEditarPost(mascota) {
     if (!usuarioLogueado) return false;
-
-    return (
-      Number(usuarioLogueado.id_user) === Number(mascota.id_user)
-    );
+    return Number(usuarioLogueado.id_user) === Number(mascota.id_user);
   }
 
   function cambiarEstadoMascota(mascota, nuevoEstado) {
-    if (!usuarioLogueado) {
-      alert("Debes iniciar sesión");
-      return;
-    }
-
-    if (!puedeEditarPost(mascota)) {
-      alert("Solo la persona que creó el post puede cambiar el estado");
-      return;
-    }
+    if (!usuarioLogueado) return alert("Debes iniciar sesión");
+    if (!puedeEditarPost(mascota)) return alert("Solo el creador puede cambiar este post");
 
     fetch(`http://localhost:3001/mascotas/${mascota.id_mascota}/estado`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         estado: nuevoEstado,
-        id_user: usuarioLogueado.id_user,
-      }),
+        id_user: usuarioLogueado.id_user
+      })
     })
       .then((res) => res.json())
-      .then((data) => {
-        console.log("Estado actualizado:", data);
-
-        setMascotas((mascotasActuales) =>
-          mascotasActuales.map((m) =>
+      .then(() => {
+        setMascotas((actuales) =>
+          actuales.map((m) =>
             m.id_mascota === mascota.id_mascota
               ? { ...m, estado: nuevoEstado }
               : m
           )
         );
-
-        if (mascotaSeleccionada?.id_mascota === mascota.id_mascota) {
-          setMascotaSeleccionada({
-            ...mascotaSeleccionada,
-            estado: nuevoEstado,
-          });
-        }
       })
-      .catch((error) => {
-        console.log("Error al actualizar estado:", error);
-      });
+      .catch((error) => console.log("Error al actualizar estado:", error));
+  }
+
+  function abrirEditar(mascota) {
+    setPostEditando(mascota);
+
+    setFormEditar({
+      nombre: mascota.nombre || "",
+      raza: mascota.raza || "",
+      edad: mascota.edad || "",
+      descripcion: mascota.descripcion || "",
+      tamano: mascota.tamano || "",
+      otro_animal: mascota.otro_animal || "",
+      estado: obtenerEstado(mascota)
+    });
+  }
+
+  function guardarCambiosPost() {
+    if (!postEditando || !usuarioLogueado) return;
+
+    fetch(`http://localhost:3001/mascotas/${postEditando.id_mascota}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...formEditar,
+        id_user: usuarioLogueado.id_user
+      })
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setMascotas((actuales) =>
+          actuales.map((m) =>
+            m.id_mascota === postEditando.id_mascota
+              ? { ...m, ...formEditar }
+              : m
+          )
+        );
+
+        setPostEditando(null);
+        setMostrarCuadro(null);
+      })
+      .catch((error) => console.log("Error al editar:", error));
+  }
+
+  function eliminarPost(mascota) {
+    const confirmar = window.confirm("¿Seguro que quieres eliminar este post?");
+    if (!confirmar) return;
+
+    fetch(`http://localhost:3001/mascotas/${mascota.id_mascota}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id_user: usuarioLogueado.id_user
+      })
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setMascotas((actuales) =>
+          actuales.filter((m) => m.id_mascota !== mascota.id_mascota)
+        );
+
+        setPostEditando(null);
+        setMostrarCuadro(null);
+      })
+      .catch((error) => console.log("Error al eliminar:", error));
   }
 
   const mascotasFiltradas = mascotas.filter((mascota) => {
     const tipoMascota = obtenerTipoMascota(mascota);
     const estadoMascota = obtenerEstado(mascota);
 
-    const tipoCoincide =
-      tipoFiltro === "Todos" || tipoMascota === tipoFiltro;
-
-    const estadoCoincide =
-      estadoFiltro === "Todos" || estadoMascota === estadoFiltro;
+    const tipoCoincide = tipoFiltro === "Todos" || tipoMascota === tipoFiltro;
+    const estadoCoincide = estadoFiltro === "Todos" || estadoMascota === estadoFiltro;
 
     const razaCoincide =
       razaFiltro === "Todas" ||
@@ -193,9 +241,7 @@ function Mapa() {
 
     const otroAnimalCoincide =
       otroAnimalFiltro === "" ||
-      mascota.otro_animal
-        ?.toLowerCase()
-        .includes(otroAnimalFiltro.toLowerCase());
+      mascota.otro_animal?.toLowerCase().includes(otroAnimalFiltro.toLowerCase());
 
     let kmCoincide = true;
 
@@ -227,36 +273,11 @@ function Mapa() {
 
   const totalPaginas = Math.ceil(mascotasFiltradas.length / postsPorPagina);
   const indiceInicial = (paginaActual - 1) * postsPorPagina;
-  const indiceFinal = indiceInicial + postsPorPagina;
-  const mascotasPaginadas = mascotasFiltradas.slice(indiceInicial, indiceFinal);
+  const mascotasPaginadas = mascotasFiltradas.slice(indiceInicial, indiceInicial + postsPorPagina);
 
   useEffect(() => {
     setPaginaActual(1);
   }, [tipoFiltro, estadoFiltro, razaFiltro, tamanoFiltro, otroAnimalFiltro, kmFiltro]);
-
-  function cambiarPagina(numero) {
-    setPaginaActual(numero);
-  }
-
-  function irALogin() {
-    setMostrarMenuLogin(false);
-    navigate("/login");
-  }
-
-  function irARegistro() {
-    setMostrarMenuLogin(false);
-    navigate("/signup");
-  }
-
-  function cerrarSesion() {
-    localStorage.removeItem("usuario");
-    setUsuarioLogueado(null);
-    setMostrarMenuLogin(false);
-  }
-
-  function irACrearPost() {
-    navigate("/agregarMascota");
-  }
 
   function limpiarFiltros() {
     setTipoFiltro("Todos");
@@ -265,6 +286,12 @@ function Mapa() {
     setTamanoFiltro("Todos");
     setOtroAnimalFiltro("");
     setKmFiltro("");
+  }
+
+  function cerrarSesion() {
+    localStorage.removeItem("usuario");
+    setUsuarioLogueado(null);
+    setMostrarMenuLogin(false);
   }
 
   return (
@@ -319,10 +346,7 @@ function Mapa() {
         <div className="loginContainer">
           {usuarioLogueado ? (
             <div className="usuarioLogueado">
-              <span className="textoUsuario">
-                Ya iniciaste sesión
-                {usuarioLogueado.nombre ? `: ${usuarioLogueado.nombre}` : ""}
-              </span>
+              <span className="textoUsuario">Ya iniciaste sesión</span>
 
               <button className="botonCerrarSesion" onClick={cerrarSesion}>
                 Cerrar sesión
@@ -339,8 +363,8 @@ function Mapa() {
 
               {mostrarMenuLogin && (
                 <div className="menuLogin">
-                  <button onClick={irALogin}>Iniciar sesión</button>
-                  <button onClick={irARegistro}>Crear cuenta</button>
+                  <button onClick={() => navigate("/login")}>Iniciar sesión</button>
+                  <button onClick={() => navigate("/signup")}>Crear cuenta</button>
                 </div>
               )}
             </>
@@ -352,45 +376,27 @@ function Mapa() {
         <div className="barraSecundaria">
           {tipoFiltro === "Perro" && (
             <>
-              <select
-                value={razaFiltro}
-                onChange={(e) => setRazaFiltro(e.target.value)}
-                className="selectFiltro"
-              >
+              <select value={razaFiltro} onChange={(e) => setRazaFiltro(e.target.value)} className="selectFiltro">
                 <option value="Todas">Todas las razas</option>
                 {razasPerro.map((raza, index) => (
-                  <option key={index} value={raza}>
-                    {raza}
-                  </option>
+                  <option key={index} value={raza}>{raza}</option>
                 ))}
               </select>
 
-              <select
-                value={tamanoFiltro}
-                onChange={(e) => setTamanoFiltro(e.target.value)}
-                className="selectFiltro"
-              >
+              <select value={tamanoFiltro} onChange={(e) => setTamanoFiltro(e.target.value)} className="selectFiltro">
                 <option value="Todos">Todos los tamaños</option>
                 {tamanosPerro.map((tamano, index) => (
-                  <option key={index} value={tamano}>
-                    {tamano}
-                  </option>
+                  <option key={index} value={tamano}>{tamano}</option>
                 ))}
               </select>
             </>
           )}
 
           {tipoFiltro === "Gato" && (
-            <select
-              value={razaFiltro}
-              onChange={(e) => setRazaFiltro(e.target.value)}
-              className="selectFiltro"
-            >
+            <select value={razaFiltro} onChange={(e) => setRazaFiltro(e.target.value)} className="selectFiltro">
               <option value="Todas">Todas las razas</option>
               {razasGato.map((raza, index) => (
-                <option key={index} value={raza}>
-                  {raza}
-                </option>
+                <option key={index} value={raza}>{raza}</option>
               ))}
             </select>
           )}
@@ -404,15 +410,6 @@ function Mapa() {
               className="inputFiltro inputOtroAnimal"
             />
           )}
-
-          {estadoFiltro !== "Todos" && (
-            <div className="textoFiltroEstado">
-              Mostrando posts:{" "}
-              <strong>
-                {estadoFiltro === "perdido" ? "Perdidos" : "Encontrados"}
-              </strong>
-            </div>
-          )}
         </div>
       )}
 
@@ -421,60 +418,48 @@ function Mapa() {
           <div className="almacendeposts">
             {mascotasPaginadas.map((mascota) => {
               const estadoMascota = obtenerEstado(mascota);
+              const tipoMascota = obtenerTipoMascota(mascota);
 
               return (
                 <div
-                  className={
-                    estadoMascota === "encontrado"
-                      ? "posts postEncontrado"
-                      : "posts postPerdido"
-                  }
-                  key={mascota.id_mascota || mascota.id}
+                  className={estadoMascota === "encontrado" ? "posts postEncontrado" : "posts postPerdido"}
+                  key={mascota.id_mascota}
                 >
                   <div className="estadoPost">
-                    <span
-                      className={
-                        estadoMascota === "encontrado"
-                          ? "etiquetaEstado encontrado"
-                          : "etiquetaEstado perdido"
-                      }
-                    >
-                      {estadoMascota === "encontrado"
-                        ? "Encontrado"
-                        : "Perdido"}
+                    <span className={estadoMascota === "encontrado" ? "etiquetaEstado encontrado" : "etiquetaEstado perdido"}>
+                      {estadoMascota === "encontrado" ? "Encontrado" : "Perdido"}
                     </span>
 
-                    {puedeEditarPost(mascota) && (
-                      <select
-                        className="selectEstadoPost"
-                        value={estadoMascota}
-                        onChange={(e) =>
-                          cambiarEstadoMascota(mascota, e.target.value)
-                        }
-                      >
-                        <option value="perdido">Perdido</option>
-                        <option value="encontrado">Encontrado</option>
-                      </select>
-                    )}
+                    <div className="accionesPost">
+                      {puedeEditarPost(mascota) && (
+                        <>
+                          <button className="botonEditarPost" onClick={() => abrirEditar(mascota)}>
+                            ⚙️
+                          </button>
+
+                          <select
+                            className="selectEstadoPost"
+                            value={estadoMascota}
+                            onChange={(e) => cambiarEstadoMascota(mascota, e.target.value)}
+                          >
+                            <option value="perdido">Perdido</option>
+                            <option value="encontrado">Encontrado</option>
+                          </select>
+                        </>
+                      )}
+                    </div>
                   </div>
 
                   <div className="imagenMascota">
                     <button
                       className="botonanimal"
                       onClick={() => {
-                        setMostrarCuadro(
-                          mostrarCuadro === mascota.id_mascota
-                            ? null
-                            : mascota.id_mascota
-                        );
+                        setMostrarCuadro(mostrarCuadro === mascota.id_mascota ? null : mascota.id_mascota);
                         setMascotaSeleccionada(mascota);
                       }}
                     >
                       {mascota.imagen ? (
-                        <img
-                          src={`http://localhost:3001${mascota.imagen}`}
-                          alt={mascota.nombre}
-                        />
+                        <img src={`http://localhost:3001${mascota.imagen}`} alt={mascota.nombre} />
                       ) : (
                         <div className="sinImagen">No hay imagen</div>
                       )}
@@ -485,93 +470,51 @@ function Mapa() {
                     <h3>Nombre: {mascota.nombre}</h3>
                   </div>
 
-                  <p>Tipo: {obtenerTipoMascota(mascota) || "No especificado"}</p>
+                  <p>Tipo: {tipoMascota || "No especificado"}</p>
 
-                  {obtenerTipoMascota(mascota) === "Otro" ? (
+                  {tipoMascota === "Otro" ? (
                     <p>Animal: {mascota.otro_animal || "No especificado"}</p>
                   ) : (
                     <p>Raza: {mascota.raza || "No especificada"}</p>
                   )}
 
-                  {obtenerTipoMascota(mascota) === "Perro" && (
+                  {tipoMascota === "Perro" && (
                     <p>Tamaño: {mascota.tamano || "No especificado"}</p>
                   )}
 
-                  <p>Edad: {mascota.edad}</p>
-                  <p>Descripción: {mascota.descripcion}</p>
-
-                  {!puedeEditarPost(mascota) && usuarioLogueado && (
-                    <p className="textoNoEditable">
-                      Solo el creador puede cambiar el estado.
-                    </p>
-                  )}
+                  <p>Edad: {mascota.edad || "No especificada"}</p>
+                  <p>Descripción: {mascota.descripcion || "Sin descripción"}</p>
 
                   {mostrarCuadro === mascota.id_mascota && (
                     <div className="overlay">
-                      <div
-                        className={
-                          estadoMascota === "encontrado"
-                            ? "modelo modeloEncontrado"
-                            : "modelo modeloPerdido"
-                        }
-                      >
+                      <div className={estadoMascota === "encontrado" ? "modelo modeloEncontrado" : "modelo modeloPerdido"}>
                         <h2>Información Adicional</h2>
 
-                        <span
-                          className={
-                            estadoMascota === "encontrado"
-                              ? "etiquetaEstado encontrado"
-                              : "etiquetaEstado perdido"
-                          }
-                        >
-                          {estadoMascota === "encontrado"
-                            ? "Encontrado"
-                            : "Perdido"}
+                        <span className={estadoMascota === "encontrado" ? "etiquetaEstado encontrado" : "etiquetaEstado perdido"}>
+                          {estadoMascota === "encontrado" ? "Encontrado" : "Perdido"}
                         </span>
 
                         <p>Nombre: {mascota.nombre}</p>
-                        <p>Tipo: {obtenerTipoMascota(mascota)}</p>
+                        <p>Tipo: {tipoMascota}</p>
 
-                        {obtenerTipoMascota(mascota) === "Otro" ? (
-                          <p>Animal: {mascota.otro_animal}</p>
+                        {tipoMascota === "Otro" ? (
+                          <p>Animal: {mascota.otro_animal || "No especificado"}</p>
                         ) : (
                           <p>Raza: {mascota.raza || "No especificada"}</p>
                         )}
 
-                        {obtenerTipoMascota(mascota) === "Perro" && (
+                        {tipoMascota === "Perro" && (
                           <p>Tamaño: {mascota.tamano || "No especificado"}</p>
                         )}
 
-                        <p>Edad: {mascota.edad}</p>
-                        <p>Descripción: {mascota.descripcion}</p>
+                        <p>Edad: {mascota.edad || "No especificada"}</p>
+                        <p>Descripción: {mascota.descripcion || "Sin descripción"}</p>
 
-                        {puedeEditarPost(mascota) && (
-                          <div className="cambiarEstadoModal">
-                            <label>Estado del post:</label>
-                            <select
-                              value={estadoMascota}
-                              onChange={(e) =>
-                                cambiarEstadoMascota(mascota, e.target.value)
-                              }
-                            >
-                              <option value="perdido">Perdido</option>
-                              <option value="encontrado">Encontrado</option>
-                            </select>
-                          </div>
+                        {mascota.imagen && (
+                          <img src={`http://localhost:3001${mascota.imagen}`} alt={mascota.nombre} />
                         )}
 
-                        {mascota.imagen ? (
-                          <img
-                            src={`http://localhost:3001${mascota.imagen}`}
-                            alt={mascota.nombre}
-                          />
-                        ) : (
-                          <p>No hay imagen</p>
-                        )}
-
-                        <button onClick={() => setMostrarCuadro(null)}>
-                          Cerrar
-                        </button>
+                        <button onClick={() => setMostrarCuadro(null)}>Cerrar</button>
                       </div>
                     </div>
                   )}
@@ -584,10 +527,8 @@ function Mapa() {
             {Array.from({ length: totalPaginas }, (_, index) => (
               <button
                 key={index + 1}
-                className={
-                  paginaActual === index + 1 ? "pagina activa" : "pagina"
-                }
-                onClick={() => cambiarPagina(index + 1)}
+                className={paginaActual === index + 1 ? "pagina activa" : "pagina"}
+                onClick={() => setPaginaActual(index + 1)}
               >
                 {index + 1}
               </button>
@@ -596,17 +537,41 @@ function Mapa() {
         </div>
 
         <div className="App">
-          <Map
-            mascotaSeleccionada={mascotaSeleccionada}
-            mascotas={mascotasFiltradas}
-          />
+          <Map mascotaSeleccionada={mascotaSeleccionada} mascotas={mascotasFiltradas} />
         </div>
       </div>
 
       {usuarioLogueado && (
-        <button className="botonCrearPostFlotante" onClick={irACrearPost}>
+        <button className="botonCrearPostFlotante" onClick={() => navigate("/agregarMascota")}>
           + Crear post
         </button>
+      )}
+
+      {postEditando && (
+        <div className="overlay">
+          <div className="modelo modeloEditar">
+            <h2>Editar post</h2>
+
+            <input className="inputEditar" placeholder="Nombre" value={formEditar.nombre} onChange={(e) => setFormEditar({ ...formEditar, nombre: e.target.value })} />
+            <input className="inputEditar" placeholder="Raza" value={formEditar.raza} onChange={(e) => setFormEditar({ ...formEditar, raza: e.target.value })} />
+            <input className="inputEditar" type="number" placeholder="Edad" value={formEditar.edad} onChange={(e) => setFormEditar({ ...formEditar, edad: e.target.value })} />
+            <input className="inputEditar" placeholder="Tamaño" value={formEditar.tamano} onChange={(e) => setFormEditar({ ...formEditar, tamano: e.target.value })} />
+            <input className="inputEditar" placeholder="Otro animal" value={formEditar.otro_animal} onChange={(e) => setFormEditar({ ...formEditar, otro_animal: e.target.value })} />
+
+            <textarea className="textareaEditar" placeholder="Descripción" value={formEditar.descripcion} onChange={(e) => setFormEditar({ ...formEditar, descripcion: e.target.value })} />
+
+            <select className="inputEditar" value={formEditar.estado} onChange={(e) => setFormEditar({ ...formEditar, estado: e.target.value })}>
+              <option value="perdido">Perdido</option>
+              <option value="encontrado">Encontrado</option>
+            </select>
+
+            <div className="botonesEditar">
+              <button onClick={guardarCambiosPost}>Guardar</button>
+              <button className="botonEliminarPost" onClick={() => eliminarPost(postEditando)}>Eliminar</button>
+              <button onClick={() => setPostEditando(null)}>Cancelar</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
