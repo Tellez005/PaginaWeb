@@ -143,11 +143,24 @@ const tamanosPerro = [
   "Enorme"
 ];
 
+const coloresPerro = [
+  "Negro",
+  "Blanco",
+  "Café",
+  "Gris",
+  "Dorado",
+  "Crema",
+  "Manchado",
+  "Atigrado",
+  "Otro"
+];
+
 function AgregarMascota() {
   const [tipo, setTipo] = useState("");
   const [idTipo, setIdTipo] = useState("");
   const [otroAnimal, setOtroAnimal] = useState("");
   const [tamano, setTamano] = useState("");
+  const [color, setColor] = useState("");
 
   const [nombre, setNombre] = useState("");
   const [raza, setRaza] = useState("");
@@ -215,6 +228,7 @@ function AgregarMascota() {
     setTipo(valor);
     setRaza("");
     setTamano("");
+    setColor("");
     setOtroAnimal("");
 
     if (valor === "Perro") setIdTipo("1");
@@ -253,6 +267,11 @@ function AgregarMascota() {
         return;
       }
 
+      if (tipo === "Perro" && !color) {
+        alert("Selecciona el color del perro");
+        return;
+      }
+
       if (tipo === "Otro" && !otroAnimal) {
         alert("Escribe qué animal es");
         return;
@@ -279,6 +298,7 @@ function AgregarMascota() {
       formData.append("id_tipo", idTipo);
       formData.append("tipo", tipo);
       formData.append("tamano", tipo === "Perro" ? tamano : "");
+      formData.append("color", tipo === "Perro" ? color : "");
       formData.append("otro_animal", tipo === "Otro" ? otroAnimal : "");
 
       if (imagen) {
@@ -303,6 +323,7 @@ function AgregarMascota() {
       setIdTipo("");
       setOtroAnimal("");
       setTamano("");
+      setColor("");
       setNombre("");
       setRaza("");
       setEdad("");
@@ -396,17 +417,31 @@ function AgregarMascota() {
               )}
 
               {tipo === "Perro" && (
-                <div className="agregar-mascota-grupo">
-                  <label>Tamaño</label>
-                  <select value={tamano} onChange={(e) => setTamano(e.target.value)}>
-                    <option value="">Selecciona tamaño</option>
-                    {tamanosPerro.map((tamanoItem, index) => (
-                      <option key={index} value={tamanoItem}>
-                        {tamanoItem}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <>
+                  <div className="agregar-mascota-grupo">
+                    <label>Tamaño</label>
+                    <select value={tamano} onChange={(e) => setTamano(e.target.value)}>
+                      <option value="">Selecciona tamaño</option>
+                      {tamanosPerro.map((tamanoItem, index) => (
+                        <option key={index} value={tamanoItem}>
+                          {tamanoItem}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="agregar-mascota-grupo">
+                    <label>Color</label>
+                    <select value={color} onChange={(e) => setColor(e.target.value)}>
+                      <option value="">Selecciona color</option>
+                      {coloresPerro.map((colorItem, index) => (
+                        <option key={index} value={colorItem}>
+                          {colorItem}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </>
               )}
 
               <div className="agregar-mascota-grupo">
@@ -489,6 +524,7 @@ function AgregarMascota() {
                   onChange={handleImagen}
                 />
               </div>
+
               {preview && (
                 <div className="agregar-mascota-preview">
                   <p>Vista previa</p>

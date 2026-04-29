@@ -11,6 +11,7 @@ function Mapa() {
   const [estadoFiltro, setEstadoFiltro] = useState("Todos");
   const [razaFiltro, setRazaFiltro] = useState("Todas");
   const [tamanoFiltro, setTamanoFiltro] = useState("Todos");
+  const [colorFiltro, setColorFiltro] = useState("Todos");
   const [otroAnimalFiltro, setOtroAnimalFiltro] = useState("");
 
   const [miUbicacion, setMiUbicacion] = useState(null);
@@ -28,6 +29,7 @@ function Mapa() {
     edad: "",
     descripcion: "",
     tamano: "",
+    color: "",
     otro_animal: "",
     estado: "perdido"
   });
@@ -58,6 +60,18 @@ function Mapa() {
   ];
 
   const tamanosPerro = ["Enano", "Chico", "Mediano", "Grande", "Enorme"];
+
+  const coloresPerro = [
+    "Negro",
+    "Blanco",
+    "Café",
+    "Gris",
+    "Dorado",
+    "Crema",
+    "Manchado",
+    "Atigrado",
+    "Otro"
+  ];
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -131,6 +145,24 @@ function Mapa() {
     return mascota.estado.toLowerCase();
   }
 
+  function formatearFecha(fecha) {
+    if (!fecha) return "Sin fecha";
+
+    const fechaObjeto = new Date(fecha);
+
+    if (isNaN(fechaObjeto.getTime())) {
+      return fecha;
+    }
+
+    return fechaObjeto.toLocaleString("es-MX", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+
   function puedeEditarPost(mascota) {
     if (!usuarioLogueado) return false;
     return Number(usuarioLogueado.id_user) === Number(mascota.id_user);
@@ -170,6 +202,7 @@ function Mapa() {
       edad: mascota.edad || "",
       descripcion: mascota.descripcion || "",
       tamano: mascota.tamano || "",
+      color: mascota.color || "",
       otro_animal: mascota.otro_animal || "",
       estado: obtenerEstado(mascota)
     });
@@ -240,6 +273,10 @@ function Mapa() {
       tamanoFiltro === "Todos" ||
       mascota.tamano?.toLowerCase() === tamanoFiltro.toLowerCase();
 
+    const colorCoincide =
+      colorFiltro === "Todos" ||
+      mascota.color?.toLowerCase() === colorFiltro.toLowerCase();
+
     const otroAnimalCoincide =
       otroAnimalFiltro === "" ||
       mascota.otro_animal?.toLowerCase().includes(otroAnimalFiltro.toLowerCase());
@@ -258,7 +295,7 @@ function Mapa() {
     }
 
     if (tipoFiltro === "Perro") {
-      return tipoCoincide && estadoCoincide && razaCoincide && tamanoCoincide && kmCoincide;
+      return tipoCoincide && estadoCoincide && razaCoincide && tamanoCoincide && colorCoincide && kmCoincide;
     }
 
     if (tipoFiltro === "Gato") {
@@ -278,13 +315,14 @@ function Mapa() {
 
   useEffect(() => {
     setPaginaActual(1);
-  }, [tipoFiltro, estadoFiltro, razaFiltro, tamanoFiltro, otroAnimalFiltro, kmFiltro]);
+  }, [tipoFiltro, estadoFiltro, razaFiltro, tamanoFiltro, colorFiltro, otroAnimalFiltro, kmFiltro]);
 
   function limpiarFiltros() {
     setTipoFiltro("Todos");
     setEstadoFiltro("Todos");
     setRazaFiltro("Todas");
     setTamanoFiltro("Todos");
+    setColorFiltro("Todos");
     setOtroAnimalFiltro("");
     setKmFiltro("");
   }
@@ -307,6 +345,7 @@ function Mapa() {
               setTipoFiltro(e.target.value);
               setRazaFiltro("Todas");
               setTamanoFiltro("Todos");
+              setColorFiltro("Todos");
               setOtroAnimalFiltro("");
             }}
             className="selectFiltro"
@@ -388,6 +427,13 @@ function Mapa() {
                 <option value="Todos">Todos los tamaños</option>
                 {tamanosPerro.map((tamano, index) => (
                   <option key={index} value={tamano}>{tamano}</option>
+                ))}
+              </select>
+
+              <select value={colorFiltro} onChange={(e) => setColorFiltro(e.target.value)} className="selectFiltro">
+                <option value="Todos">Todos los colores</option>
+                {coloresPerro.map((color, index) => (
+                  <option key={index} value={color}>{color}</option>
                 ))}
               </select>
             </>
@@ -480,11 +526,15 @@ function Mapa() {
                   )}
 
                   {tipoMascota === "Perro" && (
-                    <p>Tamaño: {mascota.tamano || "No especificado"}</p>
+                    <>
+                      <p>Tamaño: {mascota.tamano || "No especificado"}</p>
+                      <p>Color: {mascota.color || "No especificado"}</p>
+                    </>
                   )}
 
                   <p>Edad: {mascota.edad || "No especificada"}</p>
                   <p>Descripción: {mascota.descripcion || "Sin descripción"}</p>
+                  <p>Publicado: {formatearFecha(mascota.fecha_creacion)}</p>
 
                   {mostrarCuadro === mascota.id_mascota && (
                     <div className="overlay">
@@ -505,11 +555,15 @@ function Mapa() {
                         )}
 
                         {tipoMascota === "Perro" && (
-                          <p>Tamaño: {mascota.tamano || "No especificado"}</p>
+                          <>
+                            <p>Tamaño: {mascota.tamano || "No especificado"}</p>
+                            <p>Color: {mascota.color || "No especificado"}</p>
+                          </>
                         )}
 
                         <p>Edad: {mascota.edad || "No especificada"}</p>
                         <p>Descripción: {mascota.descripcion || "Sin descripción"}</p>
+                        <p>Publicado: {formatearFecha(mascota.fecha_creacion)}</p>
 
                         {mascota.imagen && (
                           <img src={`http://localhost:3001${mascota.imagen}`} alt={mascota.nombre} />
@@ -548,27 +602,83 @@ function Mapa() {
         </button>
       )}
 
-      {postEditando && (
-        <div className="overlay">
-          <div className="modelo modeloEditar">
-            <h2>Editar post</h2>
+{postEditando && (
+  <div className="overlay">
+    <div className="modelo modeloEditar">
+      <h2>Editar post</h2>
 
-            <input className="inputEditar" placeholder="Nombre" value={formEditar.nombre} onChange={(e) => setFormEditar({ ...formEditar, nombre: e.target.value })} />
-            <input className="inputEditar" placeholder="Raza" value={formEditar.raza} onChange={(e) => setFormEditar({ ...formEditar, raza: e.target.value })} />
-            <input className="inputEditar" type="number" placeholder="Edad" value={formEditar.edad} onChange={(e) => setFormEditar({ ...formEditar, edad: e.target.value })} />
-            <input className="inputEditar" placeholder="Tamaño" value={formEditar.tamano} onChange={(e) => setFormEditar({ ...formEditar, tamano: e.target.value })} />
-            <input className="inputEditar" placeholder="Otro animal" value={formEditar.otro_animal} onChange={(e) => setFormEditar({ ...formEditar, otro_animal: e.target.value })} />
+      <input
+        className="inputEditar"
+        placeholder="Nombre"
+        value={formEditar.nombre}
+        onChange={(e) => setFormEditar({ ...formEditar, nombre: e.target.value })}
+      />
 
-            <textarea className="textareaEditar" placeholder="Descripción" value={formEditar.descripcion} onChange={(e) => setFormEditar({ ...formEditar, descripcion: e.target.value })} />
+      {obtenerTipoMascota(postEditando) !== "Otro" && (
+        <input
+          className="inputEditar"
+          placeholder="Raza"
+          value={formEditar.raza}
+          onChange={(e) => setFormEditar({ ...formEditar, raza: e.target.value })}
+        />
+      )}
 
-            <select className="inputEditar" value={formEditar.estado} onChange={(e) => setFormEditar({ ...formEditar, estado: e.target.value })}>
+      <input
+        className="inputEditar"
+        type="number"
+        placeholder="Edad"
+        value={formEditar.edad}
+        onChange={(e) => setFormEditar({ ...formEditar, edad: e.target.value })}
+      />
+
+      {obtenerTipoMascota(postEditando) === "Perro" && (
+        <>
+          <input
+            className="inputEditar"
+            placeholder="Tamaño"
+            value={formEditar.tamano}
+            onChange={(e) => setFormEditar({ ...formEditar, tamano: e.target.value })}
+          />
+
+          <input
+            className="inputEditar"
+            placeholder="Color"
+            value={formEditar.color}
+            onChange={(e) => setFormEditar({ ...formEditar, color: e.target.value })}
+          />
+        </>
+      )}
+
+            {obtenerTipoMascota(postEditando) === "Otro" && (
+              <input
+                className="inputEditar"
+                placeholder="Otro animal"
+                value={formEditar.otro_animal}
+                onChange={(e) => setFormEditar({ ...formEditar, otro_animal: e.target.value })}
+              />
+            )}
+
+            <textarea
+              className="textareaEditar"
+              placeholder="Descripción"
+              value={formEditar.descripcion}
+              onChange={(e) => setFormEditar({ ...formEditar, descripcion: e.target.value })}
+            />
+
+            <select
+              className="inputEditar"
+              value={formEditar.estado}
+              onChange={(e) => setFormEditar({ ...formEditar, estado: e.target.value })}
+            >
               <option value="perdido">Perdido</option>
               <option value="encontrado">Encontrado</option>
             </select>
 
             <div className="botonesEditar">
               <button onClick={guardarCambiosPost}>Guardar</button>
-              <button className="botonEliminarPost" onClick={() => eliminarPost(postEditando)}>Eliminar</button>
+              <button className="botonEliminarPost" onClick={() => eliminarPost(postEditando)}>
+                Eliminar
+              </button>
               <button onClick={() => setPostEditando(null)}>Cancelar</button>
             </div>
           </div>

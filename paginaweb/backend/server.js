@@ -31,7 +31,6 @@ const db = new sqlite3.Database(dbPath, (err) => {
     }
 });
 
-// Crear tabla users si no existe
 db.run(`
   CREATE TABLE IF NOT EXISTS users (
     id_user INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,7 +40,6 @@ db.run(`
   )
 `);
 
-// Crear tabla mascotas si no existe
 db.run(`
   CREATE TABLE IF NOT EXISTS mascotas (
     id_mascota INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,7 +49,14 @@ db.run(`
     lat REAL,
     lng REAL,
     descripcion TEXT,
-    imagen TEXT
+    imagen TEXT,
+    id_user INTEGER,
+    id_tipo INTEGER,
+    tamano TEXT,
+    otro_animal TEXT,
+    estado TEXT DEFAULT 'perdido',
+    color TEXT,
+    fecha_creacion DATETIME
   )
 `);
 
@@ -67,7 +72,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Signup POST
 app.post('/signup', (req, res) => {
     const sql = 'INSERT INTO users (nombre, email, password) VALUES (?, ?, ?)';
     const values = [
@@ -79,82 +83,16 @@ app.post('/signup', (req, res) => {
     db.run(sql, values, function (err) {
         if (err) {
             console.error(err.message);
-            return res.status(500).json("Error");
+            return res.status(500).json({ status: "Error", error: err.message });
         }
-        return res.json({ id: this.lastID });
+
+        return res.json({
+            status: "Success",
+            id_user: this.lastID
+        });
     });
 });
 
-app.put('/mascotas/:id', (req, res) => {
-    const idMascota = req.params.id;
-
-    const {
-        nombre,
-        raza,
-        edad,
-        descripcion,
-        tamano,
-        otro_animal,
-        estado,
-        id_user
-    } = req.body;
-
-    db.run(
-        `UPDATE mascotas
-         SET nombre = ?, raza = ?, edad = ?, descripcion = ?, tamano = ?, otro_animal = ?, estado = ?
-         WHERE id_mascota = ? AND id_user = ?`,
-        [
-            nombre,
-            raza,
-            edad,
-            descripcion,
-            tamano,
-            otro_animal,
-            estado,
-            idMascota,
-            id_user
-        ],
-        function (err) {
-            if (err) {
-                return res.status(500).json({ error: err.message });
-            }
-
-            if (this.changes === 0) {
-                return res.status(403).json({
-                    error: 'Solo el creador puede editar este post'
-                });
-            }
-
-            res.json({ mensaje: 'Post actualizado correctamente' });
-        }
-    );
-});
-//A
-app.delete('/mascotas/:id', (req, res) => {
-    const idMascota = req.params.id;
-    const { id_user } = req.body;
-
-    db.run(
-        `DELETE FROM mascotas WHERE id_mascota = ? AND id_user = ?`,
-        [idMascota, id_user],
-        function (err) {
-            if (err) {
-                return res.status(500).json({ error: err.message });
-            }
-
-            if (this.changes === 0) {
-                return res.status(403).json({
-                    error: 'Solo el creador puede eliminar este post'
-                });
-            }
-
-            res.json({ mensaje: 'Post eliminado correctamente' });
-        }
-    );
-});
-
-
-// Login POST
 app.post('/login', (req, res) => {
     const sql = 'SELECT * FROM users WHERE email = ? AND password = ?';
     const values = [
@@ -164,38 +102,40 @@ app.post('/login', (req, res) => {
 
     db.all(sql, values, (err, rows) => {
         if (err) {
-            return res.status(500).json({ status: "Error" });
+            return res.status(500).json({ status: "Error", error: err.message });
         }
 
         if (rows.length > 0) {
             return res.json({
                 status: "Success",
-                id_user: rows[0].id_user
-            });
-        } else {
-            return res.json({
-                status: "Failed"
+                id_user: rows[0].id_user,
+                nombre: rows[0].nombre,
+                email: rows[0].email
             });
         }
+
+        return res.json({
+            status: "Failed"
+        });
     });
 });
 
-// Ver tablas
 app.get('/prueba', (req, res) => {
     db.all('SELECT name FROM sqlite_master WHERE type="table"', [], (err, rows) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
+
         res.json(rows);
     });
 });
 
-// Obtener mascotas
 app.get('/mascotas', (req, res) => {
-    db.all('SELECT * FROM mascotas', [], (err, rows) => {
+    db.all('SELECT * FROM mascotas ORDER BY fecha_creacion DESC', [], (err, rows) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
+
         res.json(rows);
     });
 });
@@ -214,15 +154,16 @@ app.post('/api/mascotas', upload.single('imagen'), (req, res) => {
         id_user,
         id_tipo,
         tamano,
-        otro_animal
+        otro_animal,
+        color
     } = req.body;
 
     const imagen = req.file ? `/uploads/${req.file.filename}` : null;
 
     const insertar = `
         INSERT INTO mascotas 
-        (nombre, raza, edad, lat, lng, descripcion, imagen, id_user, id_tipo, tamano, otro_animal)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (nombre, raza, edad, lat, lng, descripcion, imagen, id_user, id_tipo, tamano, otro_animal, color, fecha_creacion, TEXT)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 'perdido')
     `;
 
     db.run(
@@ -238,7 +179,8 @@ app.post('/api/mascotas', upload.single('imagen'), (req, res) => {
             id_user,
             id_tipo,
             tamano,
-            otro_animal
+            otro_animal,
+            color
         ],
         function (error) {
             if (error) {
@@ -258,12 +200,72 @@ app.post('/api/mascotas', upload.single('imagen'), (req, res) => {
     );
 });
 
+app.put('/mascotas/:id', (req, res) => {
+    const idMascota = req.params.id;
+
+    const {
+        nombre,
+        raza,
+        edad,
+        descripcion,
+        tamano,
+        otro_animal,
+        estado,
+        color,
+        id_user
+    } = req.body;
+
+    db.run(
+        `
+        UPDATE mascotas
+        SET nombre = ?,
+            raza = ?,
+            edad = ?,
+            descripcion = ?,
+            tamano = ?,
+            otro_animal = ?,
+            estado = ?,
+            color = ?
+        WHERE id_mascota = ? AND id_user = ?
+        `,
+        [
+            nombre,
+            raza,
+            edad,
+            descripcion,
+            tamano,
+            otro_animal,
+            estado,
+            color,
+            idMascota,
+            id_user
+        ],
+        function (err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+
+            if (this.changes === 0) {
+                return res.status(403).json({
+                    error: 'Solo el creador puede editar este post'
+                });
+            }
+
+            res.json({ mensaje: 'Post actualizado correctamente' });
+        }
+    );
+});
+
 app.put('/mascotas/:id/estado', (req, res) => {
     const idMascota = req.params.id;
     const { estado, id_user } = req.body;
 
     db.run(
-        `UPDATE mascotas SET TEXT = ? WHERE id_mascota = ? AND id_user = ?`,
+        `
+        UPDATE mascotas
+        SET estado = ?
+        WHERE id_mascota = ? AND id_user = ?
+        `,
         [estado, idMascota, id_user],
         function (err) {
             if (err) {
@@ -275,6 +277,32 @@ app.put('/mascotas/:id/estado', (req, res) => {
             }
 
             res.json({ mensaje: 'Estado actualizado correctamente' });
+        }
+    );
+});
+
+app.delete('/mascotas/:id', (req, res) => {
+    const idMascota = req.params.id;
+    const { id_user } = req.body;
+
+    db.run(
+        `
+        DELETE FROM mascotas
+        WHERE id_mascota = ? AND id_user = ?
+        `,
+        [idMascota, id_user],
+        function (err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+
+            if (this.changes === 0) {
+                return res.status(403).json({
+                    error: 'Solo el creador puede eliminar este post'
+                });
+            }
+
+            res.json({ mensaje: 'Post eliminado correctamente' });
         }
     );
 });

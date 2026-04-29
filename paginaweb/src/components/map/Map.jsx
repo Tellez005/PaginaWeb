@@ -19,7 +19,7 @@ const dogIcon = L.icon({
 
 const catIcon = L.icon({
   iconUrl: "/icons/gatos.png",
-  iconSize: [65, 85],
+  iconSize: [40, 65],
   iconAnchor: [32, 80],
   popupAnchor: [0, -75]
 });
@@ -91,8 +91,11 @@ function Map({ mascotaSeleccionada, mascotas = [] }) {
         (position) => {
           setMiUbicacion({
             lat: position.coords.latitude,
-            lng: position.coords.longitude
+            lng: position.coords.longitude,
+            accuracy: position.coords.accuracy
           });
+
+          console.log("Ubicación:", position.coords);
         },
         (error) => {
           console.log("Error ubicación en tiempo real:", error);
@@ -100,7 +103,7 @@ function Map({ mascotaSeleccionada, mascotas = [] }) {
         {
           enableHighAccuracy: true,
           maximumAge: 0,
-          timeout: 10000
+          timeout: 30000
         }
       );
 
@@ -136,7 +139,10 @@ function Map({ mascotaSeleccionada, mascotas = [] }) {
             position={[miUbicacion.lat, miUbicacion.lng]}
             icon={myLocationIcon}
           >
-            <Popup>Estás aquí</Popup>
+            <Popup>
+            <p>Estás aquí</p>
+            <p>Precisión: {Math.round(miUbicacion.accuracy)} metros</p>
+          </Popup>
           </Marker>
         )}
 
