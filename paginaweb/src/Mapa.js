@@ -145,6 +145,24 @@ function Mapa() {
     return mascota.estado.toLowerCase();
   }
 
+  function nombreEstado(estado) {
+    if (estado === "encontrado") return "Encontrado";
+    if (estado === "resguardado") return "Resguardado";
+    return "Perdido";
+  }
+
+  function clasePost(estado) {
+    if (estado === "encontrado") return "posts postEncontrado";
+    if (estado === "resguardado") return "posts postResguardado";
+    return "posts postPerdido";
+  }
+
+  function claseModelo(estado) {
+    if (estado === "encontrado") return "modelo modeloEncontrado";
+    if (estado === "resguardado") return "modelo modeloResguardado";
+    return "modelo modeloPerdido";
+  }
+
   function formatearFecha(fecha) {
     if (!fecha) return "Sin fecha";
 
@@ -364,6 +382,7 @@ function Mapa() {
             <option value="Todos">Todos los estados</option>
             <option value="perdido">Perdidos</option>
             <option value="encontrado">Encontrados</option>
+            <option value="resguardado">Resguardados</option>
           </select>
 
           <input
@@ -469,12 +488,12 @@ function Mapa() {
 
               return (
                 <div
-                  className={estadoMascota === "encontrado" ? "posts postEncontrado" : "posts postPerdido"}
+                  className={clasePost(estadoMascota)}
                   key={mascota.id_mascota}
                 >
                   <div className="estadoPost">
-                    <span className={estadoMascota === "encontrado" ? "etiquetaEstado encontrado" : "etiquetaEstado perdido"}>
-                      {estadoMascota === "encontrado" ? "Encontrado" : "Perdido"}
+                    <span className={`etiquetaEstado ${estadoMascota}`}>
+                      {nombreEstado(estadoMascota)}
                     </span>
 
                     <div className="accionesPost">
@@ -491,6 +510,7 @@ function Mapa() {
                           >
                             <option value="perdido">Perdido</option>
                             <option value="encontrado">Encontrado</option>
+                            <option value="resguardado">Resguardado</option>
                           </select>
                         </>
                       )}
@@ -538,11 +558,11 @@ function Mapa() {
 
                   {mostrarCuadro === mascota.id_mascota && (
                     <div className="overlay">
-                      <div className={estadoMascota === "encontrado" ? "modelo modeloEncontrado" : "modelo modeloPerdido"}>
+                      <div className={claseModelo(estadoMascota)}>
                         <h2>Información Adicional</h2>
 
-                        <span className={estadoMascota === "encontrado" ? "etiquetaEstado encontrado" : "etiquetaEstado perdido"}>
-                          {estadoMascota === "encontrado" ? "Encontrado" : "Perdido"}
+                        <span className={`etiquetaEstado ${estadoMascota}`}>
+                          {nombreEstado(estadoMascota)}
                         </span>
 
                         <p>Nombre: {mascota.nombre}</p>
@@ -602,52 +622,52 @@ function Mapa() {
         </button>
       )}
 
-{postEditando && (
-  <div className="overlay">
-    <div className="modelo modeloEditar">
-      <h2>Editar post</h2>
+      {postEditando && (
+        <div className="overlay">
+          <div className="modelo modeloEditar">
+            <h2>Editar post</h2>
 
-      <input
-        className="inputEditar"
-        placeholder="Nombre"
-        value={formEditar.nombre}
-        onChange={(e) => setFormEditar({ ...formEditar, nombre: e.target.value })}
-      />
+            <input
+              className="inputEditar"
+              placeholder="Nombre"
+              value={formEditar.nombre}
+              onChange={(e) => setFormEditar({ ...formEditar, nombre: e.target.value })}
+            />
 
-      {obtenerTipoMascota(postEditando) !== "Otro" && (
-        <input
-          className="inputEditar"
-          placeholder="Raza"
-          value={formEditar.raza}
-          onChange={(e) => setFormEditar({ ...formEditar, raza: e.target.value })}
-        />
-      )}
+            {obtenerTipoMascota(postEditando) !== "Otro" && (
+              <input
+                className="inputEditar"
+                placeholder="Raza"
+                value={formEditar.raza}
+                onChange={(e) => setFormEditar({ ...formEditar, raza: e.target.value })}
+              />
+            )}
 
-      <input
-        className="inputEditar"
-        type="number"
-        placeholder="Edad"
-        value={formEditar.edad}
-        onChange={(e) => setFormEditar({ ...formEditar, edad: e.target.value })}
-      />
+            <input
+              className="inputEditar"
+              type="number"
+              placeholder="Edad"
+              value={formEditar.edad}
+              onChange={(e) => setFormEditar({ ...formEditar, edad: e.target.value })}
+            />
 
-      {obtenerTipoMascota(postEditando) === "Perro" && (
-        <>
-          <input
-            className="inputEditar"
-            placeholder="Tamaño"
-            value={formEditar.tamano}
-            onChange={(e) => setFormEditar({ ...formEditar, tamano: e.target.value })}
-          />
+            {obtenerTipoMascota(postEditando) === "Perro" && (
+              <>
+                <input
+                  className="inputEditar"
+                  placeholder="Tamaño"
+                  value={formEditar.tamano}
+                  onChange={(e) => setFormEditar({ ...formEditar, tamano: e.target.value })}
+                />
 
-          <input
-            className="inputEditar"
-            placeholder="Color"
-            value={formEditar.color}
-            onChange={(e) => setFormEditar({ ...formEditar, color: e.target.value })}
-          />
-        </>
-      )}
+                <input
+                  className="inputEditar"
+                  placeholder="Color"
+                  value={formEditar.color}
+                  onChange={(e) => setFormEditar({ ...formEditar, color: e.target.value })}
+                />
+              </>
+            )}
 
             {obtenerTipoMascota(postEditando) === "Otro" && (
               <input
@@ -672,6 +692,7 @@ function Mapa() {
             >
               <option value="perdido">Perdido</option>
               <option value="encontrado">Encontrado</option>
+              <option value="resguardado">Resguardado</option>
             </select>
 
             <div className="botonesEditar">

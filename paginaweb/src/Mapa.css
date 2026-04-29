@@ -686,3 +686,15 @@ body {
     font-size: 19px;
   }
 }
+.postResguardado {
+  border: 4px solid #f1c40f;
+}
+
+.modeloResguardado {
+  border: 4px solid #f1c40f;
+}
+
+.etiquetaEstado.resguardado {
+  background-color: #f1c40f;
+  color: #2c2c2c;
+}
