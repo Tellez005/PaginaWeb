@@ -589,7 +589,25 @@ function Mapa() {
                           <img src={`http://localhost:3001${mascota.imagen}`} alt={mascota.nombre} />
                         )}
 
+                        {usuarioLogueado && mascota.id_user !== usuarioLogueado.id_user && (
+                          <button
+                            onClick={() => {
+                              navigate('/chat', {
+                                state: {
+                                  targetUser: {
+                                    id_user: mascota.id_user,
+                                    nombre: mascota.nombre_usuario
+                                  }
+                                }
+                              });
+                            }}
+                          >
+                            Contactar
+                          </button>
+                        )}
+
                         <button onClick={() => setMostrarCuadro(null)}>Cerrar</button>
+                        
                       </div>
                     </div>
                   )}

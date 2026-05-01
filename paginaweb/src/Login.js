@@ -54,15 +54,15 @@ function Login() {
             axios.post('http://localhost:3001/login', values)
                 .then(res => {
                     if (res.data.status === "Success") {
+                        // Guardar nombre real que devuelve el servidor
                         localStorage.setItem(
                             "usuario",
                             JSON.stringify({
-                                nombre: "",
-                                email: values.email, 
-                                "id_user": res.data.id_user
+                                nombre: res.data.nombre,
+                                email: values.email,
+                                id_user: res.data.id_user
                             })
                         );
-
                         navigate('/');
                     } else {
                         alert("Account does not exist or wrong password entered");
