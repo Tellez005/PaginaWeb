@@ -57,7 +57,7 @@ function SignUp() {
         if(validationErrors.name === "" && validationErrors.email === "" && validationErrors.password === "") {
             axios.post('http://localhost:3001/signup', values)
             .then(res => {
-                navigate('/');
+                navigate('/login');
             })
             .catch(err => console.log(err));
         }
@@ -103,7 +103,7 @@ function SignUp() {
 
                     <button className='auth-button'>Sign Up</button>
                     <p className='auth-text'>You agree to our terms and policies</p>
-                    <Link to="/" className='auth-link'>Back to Login</Link>
+                    <Link to="/login" className='auth-link'>Back to Login</Link>
                 </form>
             </div>
         </div>
