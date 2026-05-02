@@ -171,6 +171,26 @@ body {
   background-color: #d9ecec;
 }
 
+.botonChatFlotante {
+  position: fixed;
+  left: 25px;
+  bottom: 80px; /* justo encima del de crear post */
+  z-index: 3000;
+  border: none;
+  border-radius: 18px;
+  padding: 14px 22px;
+  background-color: #78a8a8;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.botonChatFlotante:hover {
+  background-color: #5f9393;
+}
+
 .usuarioLogueado {
   display: flex;
   align-items: center;

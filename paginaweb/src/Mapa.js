@@ -640,6 +640,12 @@ function Mapa() {
         </button>
       )}
 
+      {usuarioLogueado && (
+        <button className="botonChatFlotante" onClick={() => navigate("/chat")}>
+          💬 Mis chats
+        </button>
+      )}
+
       {postEditando && (
         <div className="overlay">
           <div className="modelo modeloEditar">
